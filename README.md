@@ -3,5 +3,5 @@
 Kurssi aineopintojen harjoitustyö: Algoritmit ja tekoäly.
 
 ## Dokumentaatio
-[Vaatimusmäärittely]()
-[Viikkoraportit]()
+[Vaatimusmäärittely](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/specification.md)
+[Viikkoraportit](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/)
