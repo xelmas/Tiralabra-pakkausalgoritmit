@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "tiralabra-pakkausalgoritmit"
+version = "0.1.0"
+description = ""
+authors = ["Elisa Suorsa <84924097+xelmas@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "tiralabra_pakkausalgoritmit"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytest = "^8.1.1"
+pylint = "^3.1.0"
+invoke = "^2.2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.0.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
