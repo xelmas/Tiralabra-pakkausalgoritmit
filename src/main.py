@@ -1,2 +1,5 @@
+import huffman
 
-print("Hello")
+
+H = huffman.HuffmanCoding("src/text.txt")
+H.compress()
