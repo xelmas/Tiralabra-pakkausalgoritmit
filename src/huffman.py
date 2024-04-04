@@ -1,4 +1,5 @@
 import heapq
+import os
 
 
 class Node:
@@ -11,7 +12,7 @@ class Node:
         right: right child.
     """
 
-    def __init__(self, character, freq):
+    def __init__(self, character=None, freq=None):
         """Constructor that creates a new node.
 
         Args:
@@ -22,6 +23,9 @@ class Node:
         self.freq = freq
         self.left = None
         self.right = None
+
+    def is_leaf_node(self):
+        return self.left is None
 
     def __lt__(self, other):
         """Compare nodes based on frequencies so that the
@@ -58,6 +62,7 @@ class HuffmanCoding:
         self.path = path
         self.bit_strings = {}
         self.root = None
+        self.header = ""
 
     def create_frequency_dict(self, text):
         """Calculate the frequencies of characters in a text and return a dictionary.
@@ -150,11 +155,11 @@ class HuffmanCoding:
         return text
 
     # function to help debugging
-    def print_huffman_tree(self, root, level=0):
+    def _print_huffman_tree(self, root, level=0):
         if root is not None:
-            self.print_huffman_tree(root.right, level + 1)
+            self._print_huffman_tree(root.right, level + 1)
             print(" " * 5 * level + "-->", root.char, root.freq)
-            self.print_huffman_tree(root.left, level + 1)
+            self._print_huffman_tree(root.left, level + 1)
 
     def create_bit_strings_dict(self):
         """Create a dictionary mapping characters to their Huffman codes.
@@ -173,6 +178,7 @@ class HuffmanCoding:
         """
         bit_string = ""
         self.create_bit_string(self.root, bit_string)
+        return self.bit_strings
 
     def create_bit_string(self, node, bit_string):
         """Recursively creates bit strings for each character.
@@ -198,12 +204,159 @@ class HuffmanCoding:
         self.create_bit_string(node.left, bit_string + "0")
         self.create_bit_string(node.right, bit_string + "1")
 
+    def encode_text(self, text):
+        encoded_text = ""
+        for char in text:
+            encoded_text += self.bit_strings[char]
+
+        return encoded_text
+
+    def convert_header_data_to_bytes(self, header_data):
+        encoded_bytes = bytearray()
+        for i in range(0, len(header_data), 8):
+            byte = header_data[i:i+8]
+            byte_value = int(byte, 2)
+            encoded_bytes.append(byte_value)
+
+        return encoded_bytes
+
+    def write_binary_file(self, binary_header, filename):
+        with open(filename, "wb") as file:
+            file.write(binary_header)
+
+    def create_binary_string(self, filename):
+        with open(filename, "rb") as read_file:
+            bytes_data = read_file.read()
+            binary_string = "".join(format(byte, "08b") for byte in bytes_data)
+        return binary_string
+
+    def read_binary_file(self, filename):
+        header_str = self.create_binary_string(filename)
+        return header_str
+
+    def encode_header(self, node):
+        if node.is_leaf_node():
+            self.header += "1"
+            self.header += format(ord(node.char), "08b")
+        else:
+            self.header += "0"
+            self.encode_header(node.left)
+            self.encode_header(node.right)
+
+    def _add_padding(self, code, header_size):
+        padding_length = (8 - header_size) % 8
+        padded_code = "0" * padding_length + code
+        return padding_length, padded_code
+
+    def create_header(self, text):
+        encoded_text = self.encode_text(text)
+        self.encode_header(self.root)
+
+        length_header = len(self.header)
+        len_encoded_text = len(encoded_text)
+        len_header_bin = format(length_header, "016b")
+
+        padding_len_header, padded_header = self._add_padding(
+            self.header, length_header)
+        padding_len_header_bin = format(padding_len_header, "08b")
+
+        padding_len_data, padded_data = self._add_padding(
+            encoded_text, len_encoded_text)
+        padding_len_data_bin = format(padding_len_data, "08b")
+
+        data_array = []
+
+        data_array.append(len_header_bin)
+        data_array.append(padding_len_header_bin)
+        data_array.append(padding_len_data_bin)
+
+        data_array.append(padded_header)
+        data_array.append(padded_data)
+
+        complete_data = "".join(data for data in data_array)
+        return complete_data
+
     def compress(self):
-        # output_file = "text" + ".bin"
+        directory, filename = os.path.split(self.path)
+        output_file_name = os.path.splitext(filename)[0] + ".bin"
+        new_path = directory + "/" + output_file_name
+
         text = self.read_file()
         self.build_huffman_tree(text)
         self.create_bit_strings_dict()
-        print("Frequencies:", self.create_frequency_dict(text))
-        print("Bit strings: ", self.bit_strings)
-        self.print_huffman_tree(self.root)
-        print("Compressed")
+
+        header_data = self.create_header(text)
+        header_binary = self.convert_header_data_to_bytes(header_data)
+        self.write_binary_file(header_binary, new_path)
+
+    def extract_data(self, compressed_data_str):
+        len_header = compressed_data_str[:16]
+        len_header_base = int(len_header, base=2)
+
+        padding_len_header = compressed_data_str[17:24]
+        padding_len_header_base = int(padding_len_header, base=2)
+
+        padding_len_data = compressed_data_str[24:32]
+        padding_len_data_base = int(padding_len_data, base=2)
+
+        header_data = compressed_data_str[32+padding_len_header_base:32 +
+                                          len_header_base+padding_len_header_base]
+        compressed_data = compressed_data_str[32+len_header_base +
+                                              padding_len_header_base+padding_len_data_base:]
+
+        return header_data, compressed_data
+
+    def rebuild_huffman_tree(self, header, index):
+        if index >= len(header):
+            return None, index
+
+        bit = header[index]
+        index += 1
+
+        if bit == "1":
+            char_bits = header[index:index + 8]
+            char = chr(int(char_bits, base=2))
+            index += 8
+            node = Node(char)
+        else:
+            left_node, index = self.rebuild_huffman_tree(header, index)
+            right_node, index = self.rebuild_huffman_tree(header, index)
+            node = Node()
+            node.left = left_node
+            node.right = right_node
+
+        return node, index
+
+    def decode_text(self, compressed_data, huffman_codes):
+        decoded_text = ""
+        sequence = ""
+
+        for bit in compressed_data:
+            sequence += bit
+
+            for char, code in huffman_codes.items():
+                if sequence == code:
+                    decoded_text += char
+                    sequence = ""
+                    break
+        return decoded_text
+
+    def write_decoded_text_to_file(self, decoded_text):
+        directory, filename = os.path.split(self.path)
+        output_file_name = os.path.splitext(filename)[0] + "_decompressed.txt"
+        new_path = directory + "/" + output_file_name
+
+        with open(new_path, "w", encoding="utf-8") as file:
+            file.write(decoded_text)
+
+    def decompress(self):
+        directory, filename = os.path.split(self.path)
+        input_file_name = os.path.splitext(filename)[0] + ".bin"
+        new_path = directory + "/" + input_file_name
+        compressed_data_str = self.read_binary_file(new_path)
+        header_data, compressed_data = self.extract_data(compressed_data_str)
+        root, _ = self.rebuild_huffman_tree(header_data, 0)
+        self.root = root
+        huffman_codes = self.create_bit_strings_dict()
+        decoded_text = self.decode_text(compressed_data, huffman_codes)
+        self.write_decoded_text_to_file(decoded_text)
