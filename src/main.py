@@ -2,6 +2,7 @@ import huffman
 
 
 def huffman_coding(filename):
+    prev_compress = False
 
     huffman_algorithm = huffman.HuffmanCoding(f"src/{filename}")
     while True:
@@ -10,9 +11,13 @@ def huffman_coding(filename):
         if action == "C":
             huffman_algorithm.compress()
             print("Compressed")
+            prev_compress = True
         if action == "D":
-            huffman_algorithm.decompress()
-            print("Decompressed")
+            if prev_compress:
+                huffman_algorithm.decompress()
+                print("Decompressed")
+            else:
+                print("File must be first compressed")
         if action == "E":
             break
 
@@ -28,7 +33,4 @@ def main():
             break
 
 
-H = huffman.HuffmanCoding("src/text.txt")
-H.compress()
-H.decompress()
-# main()
+main()
