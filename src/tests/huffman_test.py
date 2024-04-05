@@ -60,7 +60,7 @@ class TestHuffmanCoding(unittest.TestCase):
         compressed_data_str = "0000000000110001000001110000010100000000001010000101010001001010001010101000001101000011000001010101010100001111111111110010010101010101"
         header_data = "0001010000101010001001010001010101000001101000011"
         actual_data = "1010101010100001111111111110010010101010101"
-        header_result, actual_data_result = self.huffman.extract_data(
+        header_result, actual_data_result = self.huffman.parse_data(
             compressed_data_str)
         self.assertTupleEqual(
             (header_result, actual_data_result), (header_data, actual_data))
