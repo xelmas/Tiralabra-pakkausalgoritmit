@@ -1,12 +1,12 @@
 import unittest
-import huffman
+from huffman import HuffmanCoding
 import heapq
 
 
 class TestHuffmanCoding(unittest.TestCase):
     def setUp(self):
-        self.huffman = huffman.HuffmanCoding("src/tests/testfile.txt")
-        self.text = self.huffman.read_file()
+        self.huffman = HuffmanCoding("src/tests/testfile.txt")
+        self.text = self.huffman.file_handler.read_file()
         self.freq = self.huffman.create_frequency_dict(self.text)
 
     def test_creating_frequency_dict(self):

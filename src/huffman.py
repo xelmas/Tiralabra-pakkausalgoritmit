@@ -1,6 +1,4 @@
 import heapq
-import os
-
 
 class Node:
     """Class for nodes.
@@ -53,13 +51,13 @@ class HuffmanCoding:
         root (Node): The root node of the Huffman tree.
     """
 
-    def __init__(self, path):
+    def __init__(self, filehandler):
         """Create a new instance of Huffman coding algorithm.
 
         Args:
             path (str): A path to the text file to be compressed/decompressed.
         """
-        self.path = path
+        self.filehandler = filehandler
         self.bit_strings = {}
         self.root = None
         self.header = ""
@@ -144,16 +142,6 @@ class HuffmanCoding:
         self.merge_nodes(min_heap)
         return self.root
 
-    def read_file(self):
-        """Read a file and return its contents as a string.
-
-        Returns:
-            text (str): A string that contains the content of the file.
-        """
-        with open(self.path, "r", encoding="utf-8") as file:
-            text = file.read()
-        return text
-
     def create_bit_strings_dict(self):
         """Create a dictionary mapping characters to their Huffman codes.
 
@@ -228,31 +216,6 @@ class HuffmanCoding:
             encoded_bytes.append(byte_value)
 
         return encoded_bytes
-
-    def write_header_to_binary_file(self, binary_header, filename):
-        """Write given data to binary file.
-
-        Args:
-            binary_header (bytearray): The content to be written.
-            filename (str): The name of the output file.
-        """
-
-        with open(filename, "wb") as file:
-            file.write(binary_header)
-
-    def read_binary_file(self, filename):
-        """Read a binary file and return its content as a string representing binary data.
-
-        Args:
-            filename: The name of the input file.
-
-        Returns:
-            str: The content of the binary file formatted as a string.
-        """
-        with open(filename, "rb") as read_file:
-            bytes_data = read_file.read()
-            binary_string = "".join(format(byte, "08b") for byte in bytes_data)
-        return binary_string
 
     def encode_header(self, node):
         """Encode the generated huffman tree so it can be rebuilt and the data decoded.
@@ -334,7 +297,7 @@ class HuffmanCoding:
         complete_data = "".join(data for data in data_array)
         return complete_data
 
-    def compress(self):
+    def compress(self, text):
         """Compress the file given during initialization.
 
         This method compresses the file given in the constructor. It reads the content of the file,
@@ -342,17 +305,16 @@ class HuffmanCoding:
         the huffman tree, and writes the complete header data to binary file that can be used to
         rebuild the tree and decode the data.
         """
-        directory, filename = os.path.split(self.path)
-        output_file_name = os.path.splitext(filename)[0] + ".bin"
-        new_path = directory + "/" + output_file_name
-
-        text = self.read_file()
         self.build_huffman_tree(text)
         self.create_bit_strings_dict()
-
         header_data = self.create_header(text)
-        header_binary = self.convert_header_data_to_bytes(header_data)
-        self.write_header_to_binary_file(header_binary, new_path)
+        compressed_header_in_binary = self.convert_header_data_to_bytes(header_data)
+        return compressed_header_in_binary
+    
+    def compress_file(self):
+        text = self.filehandler.read_file()
+        compressed_text = self.compress(text)
+        self.filehandler.write_data_to_binary_file(compressed_text)
 
     def parse_data(self, compressed_data_str):
         """Parse header data representing the huffman tree and the compressed data
@@ -415,22 +377,16 @@ class HuffmanCoding:
                     break
         return decoded_text
 
-    def write_decoded_text_to_file(self, decoded_text):
-        directory, filename = os.path.split(self.path)
-        output_file_name = os.path.splitext(filename)[0] + "_decompressed.txt"
-        new_path = directory + "/" + output_file_name
-
-        with open(new_path, "w", encoding="utf-8") as file:
-            file.write(decoded_text)
-
-    def decompress(self):
-        directory, filename = os.path.split(self.path)
-        input_file_name = os.path.splitext(filename)[0] + ".bin"
-        new_path = directory + "/" + input_file_name
-        compressed_data_str = self.read_binary_file(new_path)
+    def decompress(self, compressed_data_str):
+        
         header_data, compressed_data = self.parse_data(compressed_data_str)
         root, _ = self.rebuild_huffman_tree(header_data, 0)
         self.root = root
         huffman_codes = self.create_bit_strings_dict()
         decoded_text = self.decode_text(compressed_data, huffman_codes)
-        self.write_decoded_text_to_file(decoded_text)
+        return decoded_text
+    
+    def decompress_file(self):
+        compressed_data_str = self.filehandler.read_binary_file()
+        decoded_text = self.decompress(compressed_data_str)
+        self.filehandler.write_decoded_text_to_file(decoded_text)
