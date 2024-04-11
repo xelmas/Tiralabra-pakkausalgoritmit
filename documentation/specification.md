@@ -11,7 +11,7 @@ Aiheena on toteuttaa kaksi erilaista häviötöntä pakkaus- ja purkausalgoritmi
 
 ## Algoritmit
 
-Projektiin on valittu vertailtaviksi Huffman-koodaus ja Lempel-Ziv LZ77-algoritmi.
+Projektiin on valittu vertailtaviksi Huffman-koodaus ja Lempel-Ziv LZW-algoritmi.
 
 ### Viitteet
 
@@ -19,9 +19,9 @@ Huffman-koodaus
 - [GeeksForGeeks](https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/)
 - [Wikipedia](https://en.wikipedia.org/wiki/Huffman_coding)
 
-Lempel-Ziv LZ77
-- [Wikipedia](https://en.wikipedia.org/wiki/LZ77_and_LZ78)
-- [Data Compression Reference Center](https://archive.ph/20130107232302/http://oldwww.rasip.fer.hr/research/compress/algorithms/fund/lz/lz77.html)
+Lempel-Ziv LZw
+- [Wikipedia](https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch)
+- [GeeksForGeeks](https://www.geeksforgeeks.org/lzw-lempel-ziv-welch-compression-technique/)
 
 ## Toiminnallisuudet
 
