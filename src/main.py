@@ -1,36 +1,37 @@
-import huffman
+from compression_comparator import CompressionComparator
+from filehandler import FileHandler
+from huffman import HuffmanCoding
+from lzw import LZW
+from ui import UI
 
-
-def huffman_coding(filename):
-    prev_compress = False
-
-    huffman_algorithm = huffman.HuffmanCoding(f"src/{filename}")
+def action_loop(ui, comparator, algorithm, prev_compress=False):
     while True:
-        action = input(
-            "Press C: compress \npress D: decompress\npress E: exit\n").upper()
+        action = ui.get_action()
         if action == "C":
-            huffman_algorithm.compress()
-            print("Compressed")
+            comparator.compress(algorithm)
             prev_compress = True
         if action == "D":
             if prev_compress:
-                huffman_algorithm.decompress()
-                print("Decompressed")
+                comparator.decompress(algorithm)
             else:
-                print("File must be first compressed")
+                ui.display_message("File must be compressed first")
         if action == "E":
             break
 
-
 def main():
-    filename = input("Give name of the file ")
+    ui = UI()
+    path = ui.get_file_path()
+    filehandler = FileHandler(path)
+    huffman = HuffmanCoding(filehandler)
+    lzw = LZW(filehandler)
+    comparator = CompressionComparator(huffman, lzw)
+
     while True:
-        algorithm = input(
-            "Press H to Huffman coding and press E to exit: ").upper()
-        if algorithm == "H":
-            huffman_coding(filename)
-        if algorithm == "E":
+        chosen_algorithm = ui.get_algorithm()
+        if chosen_algorithm == "H":
+            action_loop(ui, comparator, huffman)
+        if chosen_algorithm == "L":
+            action_loop(ui, comparator, lzw)
+        if chosen_algorithm == "E":
             break
-
-
 main()
