@@ -1,12 +1,14 @@
 import unittest
 from huffman import HuffmanCoding
+from filehandler import FileHandler
 import heapq
 
 
 class TestHuffmanCoding(unittest.TestCase):
     def setUp(self):
-        self.huffman = HuffmanCoding("src/tests/testfile.txt")
-        self.text = self.huffman.file_handler.read_file()
+        filehandler = FileHandler("src/tests/testfile.txt")
+        self.huffman = HuffmanCoding(filehandler)
+        self.text = self.huffman.filehandler.read_file()
         self.freq = self.huffman.create_frequency_dict(self.text)
 
     def test_creating_frequency_dict(self):
@@ -91,3 +93,17 @@ class TestHuffmanCoding(unittest.TestCase):
         huffman_codes = self.huffman.create_bit_strings_dict()
         result = self.huffman.decode_text(compressed_data, huffman_codes)
         self.assertEqual(result, expected)
+
+    def test_compress(self):
+        expected_result = bytearray(b'\x001\x07\x05\x00(TJ*\x83C\x05U\x0f\xff%U')
+        result = self.huffman.compress(self.text)
+        self.assertEqual(result, expected_result)
+    
+    def test_decompress(self):
+        expected_result = "AAAAAABCCCCCCDDEEEEE"
+        compressed_data = "0000000000110001000001110000010100000000001010000101010001001010001010101000001101000011000001010101010100001111111111110010010101010101"
+        result = self.huffman.decompress(compressed_data)
+        self.assertEqual(result, expected_result)
+
+
+

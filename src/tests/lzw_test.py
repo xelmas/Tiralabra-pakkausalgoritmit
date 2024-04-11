@@ -1,11 +1,13 @@
 import unittest
+from filehandler import FileHandler
 from lzw import LZW
 
 
 class TestLZW(unittest.TestCase):
     def setUp(self):
-        self.lzw = LZW("src/tests/testfile2.txt")
-        self.text = self.lzw.file_handler.read_file()
+        filehandler = FileHandler("src/tests/testfile2.txt")
+        self.lzw = LZW(filehandler)
+        self.text = self.lzw.filehandler.read_file()
 
     def test_init_table_compress(self):
         expected_table = {chr(i): i for i in range(256)}
@@ -53,3 +55,17 @@ class TestLZW(unittest.TestCase):
         expected_result = "WYS*WYGWYS*WYSWYSG"
         result = self.lzw.decode(decoded_data)
         self.assertEqual(result, expected_result)
+    
+    def test_compress(self):
+        self.lzw._init_table(compress=True)
+        expected_result = bytearray(b'\x04\x00W\x05\x90S\x02\xa1\x00\x04q\x00\x10!\x06\x10`G')
+        result = self.lzw.compress(self.text)
+        self.assertEqual(result, expected_result)
+    
+    def test_decompress(self):
+        self.lzw._init_table(compress=False)
+        expected_result = "WYS*WYGWYS*WYSWYSG"
+        binary_data_array = "000001000000000001010111000001011001000001010011000000101010000100000000000001000111000100000000000100000010000100000110000100000110000001000111"
+        result = self.lzw.decompress(binary_data_array)
+        self.assertEqual(result, expected_result)
+        
