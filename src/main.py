@@ -4,6 +4,7 @@ from huffman import HuffmanCoding
 from lzw import LZW
 from ui import UI
 
+
 def action_loop(ui, comparator, algorithm, prev_compress=False):
     while True:
         action = ui.get_action()
@@ -18,10 +19,16 @@ def action_loop(ui, comparator, algorithm, prev_compress=False):
         if action == "E":
             break
 
+
 def main():
     ui = UI()
-    path = ui.get_file_path()
-    filehandler = FileHandler(path)
+    while True:
+        path = ui.get_file_path()
+        if path:
+            filehandler = FileHandler(path)
+            break
+        ui.display_message("File not found")
+
     huffman = HuffmanCoding(filehandler)
     lzw = LZW(filehandler)
     comparator = CompressionComparator(huffman, lzw)
@@ -34,4 +41,6 @@ def main():
             action_loop(ui, comparator, lzw)
         if chosen_algorithm == "E":
             break
+
+
 main()

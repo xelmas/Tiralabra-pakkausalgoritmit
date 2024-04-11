@@ -1,5 +1,6 @@
 import heapq
 
+
 class Node:
     """Class for nodes.
 
@@ -308,9 +309,10 @@ class HuffmanCoding:
         self.build_huffman_tree(text)
         self.create_bit_strings_dict()
         header_data = self.create_header(text)
-        compressed_header_in_binary = self.convert_header_data_to_bytes(header_data)
+        compressed_header_in_binary = self.convert_header_data_to_bytes(
+            header_data)
         return compressed_header_in_binary
-    
+
     def compress_file(self):
         text = self.filehandler.read_file()
         compressed_text = self.compress(text)
@@ -378,14 +380,14 @@ class HuffmanCoding:
         return decoded_text
 
     def decompress(self, compressed_data_str):
-        
+
         header_data, compressed_data = self.parse_data(compressed_data_str)
         root, _ = self.rebuild_huffman_tree(header_data, 0)
         self.root = root
         huffman_codes = self.create_bit_strings_dict()
         decoded_text = self.decode_text(compressed_data, huffman_codes)
         return decoded_text
-    
+
     def decompress_file(self):
         compressed_data_str = self.filehandler.read_binary_file()
         decoded_text = self.decompress(compressed_data_str)

@@ -86,7 +86,7 @@ class LZW():
         header_str = self.create_header(encoded_text_array)
         compressed_header_in_binary = self.convert_data_to_bytes(header_str)
         return compressed_header_in_binary
-        
+
     def compress_file(self):
         text = self.filehandler.read_file()
         header_in_binary = self.compress(text)
@@ -132,7 +132,7 @@ class LZW():
         decoded_data = self.decode_text(header_data)
         decoded_text = self.decode(decoded_data)
         return decoded_text
-    
+
     def decompress_file(self):
         binary_data_array = self.filehandler.read_binary_file()
         decoded_text = self.decompress(binary_data_array)
