@@ -5,18 +5,18 @@ class Node:
     """Class for nodes.
 
     Attributes:
-        char: character in a text.
-        freq: frequency of the char.
-        left: left child.
-        right: right child.
+        char: A character in a text.
+        freq: The frequency of the char.
+        left: The left child.
+        right: The right child.
     """
 
     def __init__(self, character=None, freq=None):
         """Constructor that creates a new node.
 
         Args:
-            character: character.
-            freq: frequency of the char.
+            character: A character.
+            freq: The frequency of the char.
         """
         self.char = character
         self.freq = freq
@@ -33,7 +33,7 @@ class Node:
         This is used to implement the min heap.
 
         Args:
-            other: other node to compare.
+            other: The other node to compare.
 
         Returns:
             Boolean: True if frequency is lower than other, otherwise False.
@@ -47,7 +47,7 @@ class HuffmanCoding:
     Implements the Huffman coding algorithm for text compression and decompression.
 
     Attributes:
-        path (str): The path to the text file used for compression/decompression.
+        filehandler (FileHandler): The FileHandler object provided during initialization.
         bit_strings (dict): A dictionary mapping unique characters to their Huffman codes.
         root (Node): The root node of the Huffman tree.
     """
@@ -56,7 +56,7 @@ class HuffmanCoding:
         """Create a new instance of Huffman coding algorithm.
 
         Args:
-            path (str): A path to the text file to be compressed/decompressed.
+            filehandler (FileHandler): An instance of the FileHandler class.
         """
         self.filehandler = filehandler
         self.bit_strings = {}
@@ -157,6 +157,9 @@ class HuffmanCoding:
         the right child node. When a leaf node is reached, the constructed bit string is 
         stored in the dictionary.
 
+        Returns:
+            (dict):  A dictionary where keys are characters and values are 
+                    the constructed Huffman codes.
         """
         bit_string = ""
         self.create_bit_string(self.root, bit_string)
@@ -208,7 +211,7 @@ class HuffmanCoding:
             header_data (str): The string of header data to be converted.
 
         Returns:
-            bytearray: The converted data as an array of bytes.
+            encoded_bytes (bytearray): The converted data as an array of bytes.
         """
         encoded_bytes = bytearray()
         for i in range(0, len(header_data), 8):
@@ -221,7 +224,7 @@ class HuffmanCoding:
     def encode_header(self, node):
         """Encode the generated huffman tree so it can be rebuilt and the data decoded.
 
-        The header is encoded with following logic:
+        The header is encoded with the following logic:
         if node is a leaf:
             - add "1".
             - add binary representation of the character in 8 bits.
@@ -269,7 +272,7 @@ class HuffmanCoding:
             text (str): The text to encode and create a header for.
 
         Returns:
-            str: The complete data represented as a string of binary data.
+            complete data (str): The complete data represented as a string of binary data.
         """
         encoded_text = self.encode_text(text)
         self.encode_header(self.root)
@@ -299,13 +302,18 @@ class HuffmanCoding:
         return complete_data
 
     def compress(self, text):
-        """Compress the file given during initialization.
+        """Compress the text using Huffman-coding algorithm.
 
-        This method compresses the file given in the constructor. It reads the content of the file,
-        compresses the data using Huffman-coding algorithm, creates a header representing
-        the huffman tree, and writes the complete header data to binary file that can be used to
-        rebuild the tree and decode the data.
+        This method builds the huffman tree, creates a dictionary mapping the huffman codes and
+        then generates a bytearray header representing that huffman tree.
+
+        Args:
+            text (str): The text to be compressed.
+
+        Returns:
+            header_in_binary (bytearray): The header data represented as a bytearray.
         """
+
         self.build_huffman_tree(text)
         self.create_bit_strings_dict()
         header_data = self.create_header(text)
@@ -314,6 +322,12 @@ class HuffmanCoding:
         return compressed_header_in_binary
 
     def compress_file(self):
+        """Compress the file given during initialization.
+
+        This method compresses the file given in the constructor. It reads the content of the file,
+        compresses the text and calls filehandler-object to write the text in bytearray format
+        into the file.
+        """
         text = self.filehandler.read_file()
         compressed_text = self.compress(text)
         self.filehandler.write_data_to_binary_file(compressed_text)
@@ -345,6 +359,15 @@ class HuffmanCoding:
         return header_data, compressed_data
 
     def rebuild_huffman_tree(self, header, index):
+        """Rebuild the huffman tree based on the header data.
+
+        Args:
+            header (str): A string representing binary data.
+            index (int): Pointing the current position of header data.
+
+        Returns:
+            tuple of (Node, int): A tuple containing the root of the tree and the index.
+        """
         if index >= len(header):
             return None, index
 
@@ -366,6 +389,17 @@ class HuffmanCoding:
         return node, index
 
     def decode_text(self, compressed_data, huffman_codes):
+        """Decode the text from the compressed data by swapping the huffman codes with their
+        corresponding characters.
+
+        Args:
+            compressed_data (str): The compressed text as a string representing the binary data.
+            huffman_codes (dictionary): A dictionary where keys are characters and values are 
+                    the constructed Huffman codes.
+
+        Returns:
+            str: The decoded text in ASCII format.
+        """
         decoded_text = ""
         sequence = ""
 
@@ -380,7 +414,18 @@ class HuffmanCoding:
         return decoded_text
 
     def decompress(self, compressed_data_str):
+        """Decompress the data from the compressed file.
 
+        This function parses the data given from the compressed file, rebuilds the huffman tree
+        and creates the dictionary mapping the characters and their huffman codes, and then
+        decodes the text using the rebuilt huffman tree.
+
+        Args:
+            compressed_data_str (str): The complete header data from the compressed file.
+
+        Returns:
+            decoded_text (str): The decoded text in ASCII format.
+        """
         header_data, compressed_data = self.parse_data(compressed_data_str)
         root, _ = self.rebuild_huffman_tree(header_data, 0)
         self.root = root
@@ -389,6 +434,12 @@ class HuffmanCoding:
         return decoded_text
 
     def decompress_file(self):
+        """Decompress the file given during initialization.
+
+        This method decompresses the file given in the constructor. It reads the content of the
+        file, decompresses the text and calls filehandler-object to write the text in bytearray
+        format into the file.
+        """
         compressed_data_str = self.filehandler.read_binary_file()
         decoded_text = self.decompress(compressed_data_str)
         self.filehandler.write_decoded_text_to_file(decoded_text)
