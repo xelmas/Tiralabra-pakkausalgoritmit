@@ -17,3 +17,4 @@ Tuntikirjanpito: \
 9.4. 5h \
 10.4. 4h \
 11.4. 5h \
+12.4. aloitus 09:08 - 
