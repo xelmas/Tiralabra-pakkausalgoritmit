@@ -11,14 +11,15 @@ def action_loop(ui, comparator, algorithm, prev_compress=False):
         if action == "C":
             comparator.compress(algorithm)
             prev_compress = True
+            ui.display_message("Compressed")
         if action == "D":
             if prev_compress:
                 comparator.decompress(algorithm)
+                ui.display_message("Decompressed")
             else:
                 ui.display_message("File must be compressed first")
         if action == "E":
             break
-
 
 def main():
     ui = UI()
@@ -29,9 +30,9 @@ def main():
             break
         ui.display_message("File not found")
 
-    huffman = HuffmanCoding(filehandler)
-    lzw = LZW(filehandler)
-    comparator = CompressionComparator(huffman, lzw)
+    huffman = HuffmanCoding()
+    lzw = LZW()
+    comparator = CompressionComparator(filehandler)
 
     while True:
         chosen_algorithm = ui.get_algorithm()
@@ -39,6 +40,10 @@ def main():
             action_loop(ui, comparator, huffman)
         if chosen_algorithm == "L":
             action_loop(ui, comparator, lzw)
+        if chosen_algorithm == "C":
+            ui.display_message("\nCalculating...")
+            ui.display_table(comparator.compare(huffman, lzw))
+            break
         if chosen_algorithm == "E":
             break
 
