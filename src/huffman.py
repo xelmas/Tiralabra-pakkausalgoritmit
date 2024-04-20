@@ -47,19 +47,15 @@ class HuffmanCoding:
     Implements the Huffman coding algorithm for text compression and decompression.
 
     Attributes:
-        filehandler (FileHandler): The FileHandler object provided during initialization.
         bit_strings (dict): A dictionary mapping unique characters to their Huffman codes.
         root (Node): The root node of the Huffman tree.
+        header (str): The header data as a string of binary data.
     """
 
-    def __init__(self, filehandler):
-        """Create a new instance of Huffman coding algorithm.
-
-        Args:
-            filehandler (FileHandler): An instance of the FileHandler class.
-        """
-        self.filehandler = filehandler
+    def __init__(self):
+        """Create a new instance of Huffman coding algorithm."""
         self.bit_strings = {}
+        self.reverse_bit_strings = {}
         self.root = None
         self.header = ""
 
@@ -80,7 +76,7 @@ class HuffmanCoding:
             frequency[char] += 1
         return frequency
 
-    def create_min_heap(self, frequency_dict):
+    def create_min_heap(self, frequency_dict) -> list:
         """Create nodes for each character and push those nodes onto a priority queue (min heap)
         based on their frequency values.
 
@@ -89,7 +85,7 @@ class HuffmanCoding:
             and values are the frequencies of those characters.
 
         Returns:
-            heap: A min heap of nodes.
+            heap (list of Nodes): A min heap represented as a list of nodes.
         """
         heap = []
         heapq.heapify(heap)
@@ -126,7 +122,7 @@ class HuffmanCoding:
         return self.root
 
     def build_huffman_tree(self, text):
-        """Build a Huffman tree based on the text file.
+        """Build a Huffman tree based on the characters and their frequencies in the text file.
 
         Constructs a Huffman tree by creating a dictionary of character's frequencies in the text, 
         and uses that to create a min heap and merges nodes with the lowest frequencies
@@ -170,6 +166,7 @@ class HuffmanCoding:
 
         Creates a bit string for each character in the tree that represents its encoding.
         If the node is a leaf node (character), the bit string is stored.
+        If the tree contains only one node, the bit string defaults to zero.
         If the node is an internal node, continue to its child nodes.
 
         If the node is a left child, 0 is added to the bit string.
@@ -183,7 +180,10 @@ class HuffmanCoding:
             None. Function traverses the tree recursively and updates the bit_strings dictionary.
         """
         if node.char is not None:
+            if bit_string == "":
+                bit_string = "0"
             self.bit_strings[node.char] = bit_string
+            self.reverse_bit_strings[bit_string] = node.char
             return
 
         self.create_bit_string(node.left, bit_string + "0")
@@ -193,33 +193,17 @@ class HuffmanCoding:
         """Encode the given text using huffman codes.
 
         Args:
-            text (str): The text in ASCII format to be encoded.
+            text (str): The plain text to be encoded.
 
         Returns:
-            str: The encoded text where characters are replaced by their huffman codes.
+            encoded_text (str): The encoded text where characters are replaced by their
+                            huffman codes.
         """
         encoded_text = ""
         for char in text:
             encoded_text += self.bit_strings[char]
 
         return encoded_text
-
-    def convert_header_data_to_bytes(self, header_data):
-        """Convert a string of header data to bytes.
-
-        Args:
-            header_data (str): The string of header data to be converted.
-
-        Returns:
-            encoded_bytes (bytearray): The converted data as an array of bytes.
-        """
-        encoded_bytes = bytearray()
-        for i in range(0, len(header_data), 8):
-            byte = header_data[i:i+8]
-            byte_value = int(byte, 2)
-            encoded_bytes.append(byte_value)
-
-        return encoded_bytes
 
     def encode_header(self, node):
         """Encode the generated huffman tree so it can be rebuilt and the data decoded.
@@ -243,11 +227,11 @@ class HuffmanCoding:
             self.encode_header(node.left)
             self.encode_header(node.right)
 
-    def _add_padding(self, code, header_size):
-        """Add padding to the given code if its length is not dividable by 8.
+    def _add_padding(self, binary_code: str, header_size: int) -> tuple[int, str]:
+        """Add padding to the given binary code if its length is not dividable by 8.
 
         Args:
-            code (str): The code to be padded.
+            binary_code (str): The binary code to be padded.
             header_size (int): The length of the given code.
 
         Returns:
@@ -255,7 +239,7 @@ class HuffmanCoding:
                                 and the padded code.
         """
         padding_length = (8 - header_size) % 8
-        padded_code = "0" * padding_length + code
+        padded_code = "0" * padding_length + binary_code
         return padding_length, padded_code
 
     def create_header(self, text):
@@ -305,34 +289,21 @@ class HuffmanCoding:
         """Compress the text using Huffman-coding algorithm.
 
         This method builds the huffman tree, creates a dictionary mapping the huffman codes and
-        then generates a bytearray header representing that huffman tree.
+        then generates a header as a string of binary data representing that huffman tree.
 
         Args:
             text (str): The text to be compressed.
 
         Returns:
-            header_in_binary (bytearray): The header data represented as a bytearray.
+            header_data (str): The data represented as a string of binary data.
         """
 
         self.build_huffman_tree(text)
         self.create_bit_strings_dict()
         header_data = self.create_header(text)
-        compressed_header_in_binary = self.convert_header_data_to_bytes(
-            header_data)
-        return compressed_header_in_binary
+        return header_data
 
-    def compress_file(self):
-        """Compress the file given during initialization.
-
-        This method compresses the file given in the constructor. It reads the content of the file,
-        compresses the text and calls filehandler-object to write the text in bytearray format
-        into the file.
-        """
-        text = self.filehandler.read_file()
-        compressed_text = self.compress(text)
-        self.filehandler.write_data_to_binary_file(compressed_text)
-
-    def parse_data(self, compressed_data_str):
+    def parse_data(self, complete_data: str) -> tuple[str, str]:
         """Parse header data representing the huffman tree and the compressed data
         from the given complete header data.
 
@@ -342,27 +313,27 @@ class HuffmanCoding:
         Returns:
             tuple of (str, str): A tuple containing the header data and the compressed data.
         """
-        len_header = compressed_data_str[:16]
+        len_header = complete_data[:16]
         len_header_base = int(len_header, base=2)
 
-        padding_len_header = compressed_data_str[17:24]
+        padding_len_header = complete_data[17:24]
         padding_len_header_base = int(padding_len_header, base=2)
 
-        padding_len_data = compressed_data_str[24:32]
+        padding_len_data = complete_data[24:32]
         padding_len_data_base = int(padding_len_data, base=2)
 
-        header_data = compressed_data_str[32+padding_len_header_base:32 +
-                                          len_header_base+padding_len_header_base]
-        compressed_data = compressed_data_str[32+len_header_base +
-                                              padding_len_header_base+padding_len_data_base:]
+        header_data = complete_data[32+padding_len_header_base:32 +
+                                    len_header_base+padding_len_header_base]
+        compressed_data = complete_data[32+len_header_base +
+                                        padding_len_header_base+padding_len_data_base:]
 
         return header_data, compressed_data
 
-    def rebuild_huffman_tree(self, header, index):
+    def rebuild_huffman_tree(self, header: str, index: int) -> tuple[Node, int]:
         """Rebuild the huffman tree based on the header data.
 
         Args:
-            header (str): A string representing binary data.
+            header (str): A string representing the binary data.
             index (int): Pointing the current position of header data.
 
         Returns:
@@ -388,7 +359,7 @@ class HuffmanCoding:
 
         return node, index
 
-    def decode_text(self, compressed_data, huffman_codes):
+    def decode_text(self, compressed_data: str, reverse_bit_strings: dict) -> str:
         """Decode the text from the compressed data by swapping the huffman codes with their
         corresponding characters.
 
@@ -398,7 +369,7 @@ class HuffmanCoding:
                     the constructed Huffman codes.
 
         Returns:
-            str: The decoded text in ASCII format.
+            str: The decoded text in plain text.
         """
         decoded_text = ""
         sequence = ""
@@ -406,14 +377,12 @@ class HuffmanCoding:
         for bit in compressed_data:
             sequence += bit
 
-            for char, code in huffman_codes.items():
-                if sequence == code:
-                    decoded_text += char
-                    sequence = ""
-                    break
+            if sequence in reverse_bit_strings:
+                decoded_text += reverse_bit_strings[sequence]
+                sequence = ""
         return decoded_text
 
-    def decompress(self, compressed_data_str):
+    def decompress(self, complete_data):
         """Decompress the data from the compressed file.
 
         This function parses the data given from the compressed file, rebuilds the huffman tree
@@ -421,25 +390,15 @@ class HuffmanCoding:
         decodes the text using the rebuilt huffman tree.
 
         Args:
-            compressed_data_str (str): The complete header data from the compressed file.
+            complete_data (str): The complete header data from the compressed file.
 
         Returns:
-            decoded_text (str): The decoded text in ASCII format.
+            decoded_text (str): The decoded text in plain text.
         """
-        header_data, compressed_data = self.parse_data(compressed_data_str)
+        header_data, compressed_data = self.parse_data(complete_data)
         root, _ = self.rebuild_huffman_tree(header_data, 0)
         self.root = root
-        huffman_codes = self.create_bit_strings_dict()
-        decoded_text = self.decode_text(compressed_data, huffman_codes)
+        self.create_bit_strings_dict()
+        decoded_text = self.decode_text(
+            compressed_data, self.reverse_bit_strings)
         return decoded_text
-
-    def decompress_file(self):
-        """Decompress the file given during initialization.
-
-        This method decompresses the file given in the constructor. It reads the content of the
-        file, decompresses the text and calls filehandler-object to write the text in bytearray
-        format into the file.
-        """
-        compressed_data_str = self.filehandler.read_binary_file()
-        decoded_text = self.decompress(compressed_data_str)
-        self.filehandler.write_decoded_text_to_file(decoded_text)
