@@ -4,9 +4,8 @@ import os
 pty = os.sys.platform.startswith("linux")
 
 @task
-def start(ctx):
-    ctx.run("python3 src/main.py", pty=pty)
-
+def start(ctx, function):
+    ctx.run(f"python3 src/main.py {function}", pty=pty)
 
 @task
 def format(ctx):
