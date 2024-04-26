@@ -4,7 +4,7 @@ from collections import Counter
 import heapq
 import unittest
 
-from huffman import HuffmanCoding, Node
+from algorithms.huffman import HuffmanCoding, Node
 
 
 class TestInvariantHuffmanCoding(unittest.TestCase):
@@ -53,3 +53,13 @@ class TestInvariantHuffmanCoding(unittest.TestCase):
         root_before_merging = heap[0].freq
         root_after_merging = huffman.merge_nodes(heap).freq
         self.assertLessEqual(root_before_merging, root_after_merging)
+
+    ascii_strings = st.text(alphabet=st.characters(
+        min_codepoint=0, max_codepoint=255), min_size=1)
+
+    @given(ascii_strings)
+    def test_compression_decompression_consistency(self, text):
+        huffman = HuffmanCoding()
+        compressed_text = huffman.compress(text)
+        decompressed_text = huffman.decompress(compressed_text)
+        assert decompressed_text == text

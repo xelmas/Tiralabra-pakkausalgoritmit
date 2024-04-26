@@ -1,5 +1,5 @@
 import unittest
-from huffman import HuffmanCoding, Node
+from algorithms.huffman import HuffmanCoding
 import heapq
 
 
@@ -55,16 +55,16 @@ class TestHuffmanCoding(unittest.TestCase):
         self.assertEqual(encoded_text, expected)
 
     def test_encode_header(self):
-        expected = "0001010000101010001001010001010101000001101000011"
+        expected = "00010000000001000010100000000010001001000000000100010101000000000100000110000000001000011"
         self.huffman.build_huffman_tree(self.text)
         self.huffman.encode_header(self.huffman.root)
         self.assertEqual(self.huffman.header, expected)
 
-    def test_creating_header(self):
-        expected = "0000000000110001000001110000010100000000001010000101010001001010001010101000001101000011000001010101010100001111111111110010010101010101"
+    def test_creating_complete_data(self):
+        expected = "00000000010110010000011100000101000000000010000000001000010100000000010001001000000000100010101000000000100000110000000001000011000001010101010100001111111111110010010101010101"
         self.huffman.build_huffman_tree(self.text)
         self.huffman.create_bit_strings_dict()
-        result = self.huffman.create_header(self.text)
+        result = self.huffman.create_complete_data(self.text)
         self.assertEqual(result, expected)
 
     def test_extract_data(self):
@@ -77,8 +77,8 @@ class TestHuffmanCoding(unittest.TestCase):
             (header_result, actual_data_result), (expected_header_data, expected_actual_data))
 
     def test_rebuild_huffman_tree(self):
-        expected_index = 49
-        header_data = "0001010000101010001001010001010101000001101000011"
+        expected_index = 89
+        header_data = "00010000000001000010100000000010001001000000000100010101000000000100000110000000001000011"
         root, index = self.huffman.rebuild_huffman_tree(header_data, 0)
         self.assertEqual(index, expected_index)
 
@@ -97,12 +97,12 @@ class TestHuffmanCoding(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_compress(self):
-        expected_result = "0000000000110001000001110000010100000000001010000101010001001010001010101000001101000011000001010101010100001111111111110010010101010101"
+        expected_result = "00000000010110010000011100000101000000000010000000001000010100000000010001001000000000100010101000000000100000110000000001000011000001010101010100001111111111110010010101010101"
         result = self.huffman.compress(self.text)
         self.assertEqual(result, expected_result)
 
     def test_decompress(self):
         expected_result = self.text
-        compressed_data = "0000000000110001000001110000010100000000001010000101010001001010001010101000001101000011000001010101010100001111111111110010010101010101"
+        compressed_data = "00000000010110010000011100000101000000000010000000001000010100000000010001001000000000100010101000000000100000110000000001000011000001010101010100001111111111110010010101010101"
         result = self.huffman.decompress(compressed_data)
         self.assertEqual(result, expected_result)
