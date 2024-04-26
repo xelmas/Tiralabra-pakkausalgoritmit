@@ -5,14 +5,17 @@ Kurssi aineopintojen harjoitustyö: Algoritmit ja tekoäly.
 ## Dokumentaatio
 [Vaatimusmäärittely](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/specification.md) \
 [Testausdokumentaatio](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/testing.md) \
-[Toteutusdokumentaatio](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/implementation.md)
+[Toteutusdokumentaatio](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/implementation.md) \
+[Käyttöohje](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/user_manual.md)
+
 
 ## Viikkoraportit
 [Viikkoraportti 1](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport1.md) \
 [Viikkoraportti 2](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport2.md) \
 [Viikkoraportti 3](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport3.md) \
 [Viikkoraportti 4](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport4.md) \
-[Viikkoraportti 5](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport5.md) 
+[Viikkoraportti 5](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport5.md) \
+[Viikkoraportti 6](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport6.md) 
 
 
 ## Asennusohjeet
@@ -22,9 +25,14 @@ Kurssi aineopintojen harjoitustyö: Algoritmit ja tekoäly.
 
 ## Komentorivitoiminnot
 
-### Käynnistää sovelluksen:
+### Käynnistää sovelluksen interaktiivisen käyttöliittymän:
 ```
-poetry run invoke start
+poetry run invoke start --function start
+```
+
+### Käynnistää sovelluksen ja ajaa pakkaus- ja purkualgoritmin kaikille tiedostoille automaattisesti
+```
+poetry run invoke start --function automatic_start
 ```
 
 ### Suorittaa pylint-tarkistuksen:
