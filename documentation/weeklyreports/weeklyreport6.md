@@ -12,9 +12,8 @@ LZW-luokkaan on lisätty invarianttitestejä. Invarianttitestauksella on testatt
 
 Viime viikolla ongelmaksi koitui se, että millä arvoilla LZW-algoritmin sanakirja tulisi alustaa, jotta voidaan pakata tekstitiedostoja, joissa on myös muita merkkejä kuin ascii-merkistöä 0-255. Koin haasteelliseksi löytää sopivaa tiedostoa testattavaksi, joten ratkaisin ongelman siten, että nyt ohjelma tukee kaikkia mahdollisia unicode-merkkejä, joita tekstissä esiintyy. Ennen kuin LZW-algoritmin sanakirja alustetaan, tekstitiedostosta poimitaan kaikki sellaiset merkit listaan, jotka eivät kuulu välillä 0-255. Sanakirjan alustuksessa lisätään nämä ekstramerkit myös sanakirjaan siten, että ensimmäinen ekstramerkki saa arvokseen 256 ja seuraava 257 jne. Tämä mahdollistaa sen, että testitiedostoina voidaan käyttää Project Gutenbergistä ladattuja teoksia, mutta ei tarvitse kuitenkaan alustaa sanakirjaan kaikkia mahdollisia utf-8 merkkejä. Vertasin suorituskykyä keskenään sille, että alustetaan kaikki mahdolliset merkit tai sitten vain tarvittavat, ja jälkimmäinen oli tehokkaampi tapa.
 
-TO DO:
-- Käyttöohje
-- Toteutusdokumentti
+Toteutus- ja testausdokumentit jäivät vielä kesken, joten niitä on tarkoitus ensi viikolla vielä täydentää.
+
 
 Tuntikirjanpito \
 21.4. 4h30min \
@@ -23,5 +22,5 @@ Tuntikirjanpito \
 24.4. 5h30min \
 25.4. 5h \
 26.4. 6h \
-27.4. \
-Yhteensä: 
+27.4. 3h \
+Yhteensä: 30h 30min
