@@ -24,7 +24,7 @@ joilla on todettu pakkaus- ja purkualgoritmin toimivan yhdenmukaisesti. Eli syö
 
 Tämän hetken tila:
 
-![Testikattavuus](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/coverage_report6.png)
+![Testikattavuus](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/images/coverage_report6.png)
 
 ## Mitä testattu ja miten?
 Tässä vaiheessa projektia on testattu, että 1,7 kilotavun tiedosto (text.txt) on täsmälleen saman kokoinen purkamisen jälkeen molemmilla algoritmeilla. Pakatun tiedoston koko taas on Huffman koodauksen jälkeen 945 tavua, mikä on huomattavasti pienempi kuin alkuperäinen. Pakatun tiedoston koko taas LZW-algoritmilla on 1,2 kilotavua, mikä on myös pienempi kuin alkuperäinen, mutta ei yhtä tehokas tällä testisyötteellä kuin Huffman koodauksella suoritettu.
