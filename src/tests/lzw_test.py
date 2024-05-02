@@ -1,5 +1,6 @@
 import unittest
 from algorithms.lzw import LZW
+from utilities.utils import calculate_min_bits_needed
 
 
 class TestLZW(unittest.TestCase):
@@ -93,5 +94,5 @@ class TestLZW(unittest.TestCase):
     def test_min_bits_needed(self):
         lzw = LZW()
         lzw._init_table(compress=True)
-        result = lzw.calculate_min_bits_needed()
-        self.assertTrue(result, lzw.get_min_bits_needed())
+        min_bits_needed = calculate_min_bits_needed(max(lzw.get_table().values()))
+        self.assertEqual(min_bits_needed, 8)

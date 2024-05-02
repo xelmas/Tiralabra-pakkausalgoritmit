@@ -4,6 +4,7 @@ import unittest
 import math
 
 from algorithms.lzw import LZW
+from utilities.utils import calculate_min_bits_needed
 
 
 class TestInvariantLZW(unittest.TestCase):
@@ -27,12 +28,12 @@ class TestInvariantLZW(unittest.TestCase):
         assert lzw.extra_supported_symbols == extra_symbols
 
     @given(st.dictionaries(st.characters(), st.integers(min_value=1), min_size=1))
-    def test_max_bits_consistency(self, table):
+    def test_min_bits_consistency(self, table):
         lzw = LZW()
         lzw.table = table
         max_value = max(table.values())
         expected_result = math.ceil(math.log2(max_value + 1))
-        min_bits_result = lzw.calculate_min_bits_needed()
+        min_bits_result = calculate_min_bits_needed(max_value)
         lzw.set_min_bits_needed(min_bits_result)
         assert min_bits_result == expected_result
         assert lzw.min_bits == expected_result
