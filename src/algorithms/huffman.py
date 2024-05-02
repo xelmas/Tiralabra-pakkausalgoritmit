@@ -1,5 +1,5 @@
 import heapq
-from utilities.utils import add_padding
+from utilities.utils import add_padding, calculate_min_bits_needed
 
 
 class Node:
@@ -59,6 +59,7 @@ class HuffmanCoding:
         header (str): The header data as a string of binary data.
         name (str): The name of the algorithm.
         prev_compress (bool): Indicates whether compression has occurred previously.
+        min_bits (int): The minimum bits needed to represents the length of the header.
     """
 
     def __init__(self):
@@ -69,6 +70,7 @@ class HuffmanCoding:
         self.header = ""
         self.name = "Huffman"
         self.prev_compress = False
+        self.min_bits = 0
 
     def create_frequency_dict(self, text):
         """Calculate the frequencies of characters in a text and return a dictionary.
@@ -243,11 +245,58 @@ class HuffmanCoding:
             self.encode_header(node.left)
             self.encode_header(node.right)
 
+    def set_min_bits_needed(self, bits_needed):
+        """Set min_bits to the bits_needed.
+
+        Args:
+            bits_needed (int): The integer value of minimum bits needed to represent
+                            the lenght of the header.
+        """
+        self.min_bits = bits_needed
+
+    def get_min_bits_needed(self):
+        """Get minimum bits needed.
+
+        Returns:
+            min_bits (int): The integer value of minimum bits needed to represent
+                            the lenght of the header.
+        """
+        return self.min_bits
+
+    def round_min_bits_dividable_by_eight(self, value):
+        """Round the minimum bits needed value to be dividable by 8.
+
+        If the value is not dividable by 8, it is rounded up to the nearest multiple of 8.
+
+        Args:
+            value (int): The integer value to be round.
+
+        Returns:
+            value (int): The rounded integer value of minimum bits.
+        """
+        if value % 8 != 0:
+            value += (8 - value % 8)
+        return value
+
+    def calculate_and_set_min_bits(self):
+        """Calculate and set the minimum bits needed to represent the lenght of the header.
+
+        This method calculates the minimum bits needed and rounds the value up to the nearest
+        multiple of 8, and stores the value to the attribute "self.min_bits".
+
+        """
+        min_bits_needed = calculate_min_bits_needed(len(self.header))
+        min_bits = self.round_min_bits_dividable_by_eight(min_bits_needed)
+        self.set_min_bits_needed(min_bits)
+
     def create_complete_data(self, text):
         """Create a complete data with a string representation of binary data.
 
+        First this method calculates the minimum number of bits needed to represent the length
+        of the header, and then creates the complete data.
+
         The complete data is formatted with the following logic:
-            - Length of the header (16 bits).
+            - Length of the header (minimum bits).
             - Length of the padding of the header (8 bits).
             - Length of the padding of the compressed data (8 bits).
             - Padded header data.
@@ -261,10 +310,11 @@ class HuffmanCoding:
         """
         encoded_text = self.encode_text(text)
         self.encode_header(self.root)
+        len_encoded_text = len(encoded_text)
 
         length_header = len(self.header)
-        len_encoded_text = len(encoded_text)
-        len_header_bin = format(length_header, "016b")
+        self.calculate_and_set_min_bits()
+        len_header_bin = format(length_header, f"0{self.min_bits}b")
 
         padding_len_header, padded_header = add_padding(
             self.header, length_header)
@@ -274,7 +324,6 @@ class HuffmanCoding:
         padding_len_data_bin = format(padding_len_data, "08b")
 
         data_array = []
-
         data_array.append(len_header_bin)
         data_array.append(padding_len_header_bin)
         data_array.append(padding_len_data_bin)
@@ -306,6 +355,18 @@ class HuffmanCoding:
 
         return complete_data
 
+    def parse_int_from_binary(self, binary_string):
+        """Parse integer value from the given binary string.
+
+        Args:
+            binary_string (str): The binary data represented as a string.
+
+        Returns:
+            value (int): The integer value of the given binary string.
+        """
+        value = int(binary_string, base=2)
+        return value
+
     def parse_data(self, complete_data: str) -> tuple[str, str]:
         """Parse header data representing the huffman tree and the compressed data
         from the given complete data.
@@ -316,19 +377,20 @@ class HuffmanCoding:
         Returns:
             tuple of (str, str): A tuple containing the header data and the compressed data.
         """
-        len_header = complete_data[:16]
-        len_header_base = int(len_header, base=2)
 
-        padding_len_header = complete_data[17:24]
-        padding_len_header_base = int(padding_len_header, base=2)
+        len_of_header = self.parse_int_from_binary(
+            complete_data[:self.min_bits])
+        padding_len_of_header = self.parse_int_from_binary(
+            complete_data[self.min_bits+1:self.min_bits+8])
+        padding_len_of_compressed_data = self.parse_int_from_binary(
+            complete_data[self.min_bits+8:self.min_bits+16])
 
-        padding_len_data = complete_data[24:32]
-        padding_len_data_base = int(padding_len_data, base=2)
+        header_start_index = self.min_bits + 16 + padding_len_of_header
+        header_end_index = self.min_bits + 16 + len_of_header + padding_len_of_header
+        header_data = complete_data[header_start_index:header_end_index]
 
-        header_data = complete_data[32+padding_len_header_base:32 +
-                                    len_header_base+padding_len_header_base]
-        compressed_data = complete_data[32+len_header_base +
-                                        padding_len_header_base+padding_len_data_base:]
+        compressed_data_starting_index = header_end_index + padding_len_of_compressed_data
+        compressed_data = complete_data[compressed_data_starting_index:]
 
         return header_data, compressed_data
 
@@ -408,5 +470,4 @@ class HuffmanCoding:
         decoded_text = self.decode_text(
             compressed_data, self.reverse_bit_strings)
         self.prev_compress = False
-
         return decoded_text

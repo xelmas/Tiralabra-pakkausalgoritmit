@@ -1,5 +1,4 @@
-import math
-from utilities.utils import add_padding
+from utilities.utils import add_padding, calculate_min_bits_needed
 
 
 class LZW():
@@ -143,8 +142,8 @@ class LZW():
         Returns:
             complete data (str): The complete data represented as a string of binary data.
         """
-        min_bits_needed = self.calculate_min_bits_needed()
-        self.set_min_bits_needed(min_bits_needed)
+        max_value = max(self.table.values())
+        self.min_bits = calculate_min_bits_needed(max_value)
 
         binary_string = "".join(
             format(code_value, f"0{self.min_bits}b") for code_value in code_values)
@@ -159,18 +158,6 @@ class LZW():
         complete_data = "".join(data for data in data_array)
 
         return complete_data
-
-    def calculate_min_bits_needed(self):
-        """Calculate the minimum number of bits needed to represent the biggest value in
-        the table.
-
-        Returns:
-            bits_needed (int): The integer value of minimum bits needed to represent
-                            the biggest value.
-        """
-        max_value = max(self.table.values())
-        bits_needed = math.ceil(math.log2(max_value + 1))
-        return bits_needed
 
     def set_min_bits_needed(self, bits_needed):
         """Set min_bits to the bits_needed.

@@ -1,3 +1,4 @@
+import math
 # Constants
 FILE_DIRECTORY = "src/textfiles"
 
@@ -19,3 +20,17 @@ def add_padding(binary_code: str, header_size: int) -> tuple[int, str]:
     padded_code = "0" * padding_length + binary_code
 
     return padding_length, padded_code
+
+
+def calculate_min_bits_needed(value):
+    """Calculate the minimum number of bits needed to represent the given value.
+
+    Args:
+        value (int): The integer value for which the minimum number of bits needs to be calculated.
+
+    Returns:
+        bits_needed (int): The integer value of minimum bits needed to represent
+                            the value.
+    """
+    bits_needed = math.ceil(math.log2(value + 1))
+    return bits_needed
