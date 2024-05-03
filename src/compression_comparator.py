@@ -31,13 +31,13 @@ class CompressionComparator():
 
         Returns:
             benchmark_results (list): A list containing the compression statistics with the format
-                                    [algorithm name, filename, compression time, decompression time,
-                                    compression ratio]
+                                    [algorithm name, filename, filesize, compressed filesize,
+                                    compression ratio, compression time, decompression time]
         """
         compression_stats = self.benchmark_compress(algorithm)
         decompression_stats = self.benchmark_decompress(algorithm)
         benchmark_results = compression_stats
-        benchmark_results[3] = decompression_stats[3]
+        benchmark_results[6] = decompression_stats[6]
 
         return benchmark_results
 
@@ -51,8 +51,9 @@ class CompressionComparator():
 
         Returns:
             algorithm_stats (list): A list containing the compression statistics for each algorithm.
-                                Each list element is a list with the format [algorithm name, 
-                                filename, compression time, decompression time, compression ratio]
+                                Each list element is a list with the format [algorithm name,
+                                filename, filesize, compression ratio, compression time,
+                                decompression time]
         """
 
         compression_stats = []
@@ -75,23 +76,24 @@ class CompressionComparator():
 
 
         If the decompressed file is exactly the same size as the original, the compression time
-        and compression ratio are set to 0.0, as they are not measured in this method.
-        If the decompressed file size differs from the original, all statistics are set to None,
-        indicating a decompression error.
+        compressed filesize and compression ratio are set to 0.0, as they are not measured in
+        this method. If the decompressed file size differs from the original, all statistics are
+        set to None, indicating a decompression error.
 
         Args:
             algorithm (HuffanCoding or LZW): An algorithm object to use for decompression.
 
         Returns:
             decompression_stats: A list containing the decompression statistics with the format
-                                [algorithm name, filename, compression time, decompression time,
-                                compression ratio].
+                                [algorithm name, filename, filesize, compressed filesize,
+                                compression ratio, compression time, decompression time]
 
                                 If the decompressed file is the same size as the original,
-                                list type is [str, str, float, float, float], otherwise
-                                [str, str, None, None, None].
+                                list type is [str, str, float, float, float, float, float],
+                                otherwise [str, str, float, None, None, None, None].
         """
-        decompression_stats = [algorithm.name, self.filehandler.filename]
+        decompression_stats = [
+            algorithm.name, self.filehandler.filename, self.original_file_size / 1024]
 
         start_decompress_time = time.time()
         self.decompress(algorithm)
@@ -100,13 +102,12 @@ class CompressionComparator():
 
         decompressed_file_size = self.filehandler.get_file_size()
         if decompressed_file_size == self.original_file_size:
-            stats = (0.0, decompression_time, 0.0)
+            stats = (0.0, 0.0, 0.0, decompression_time)
 
         else:
-            stats = (None, None, None)
+            stats = (None, None, None, None)
 
         decompression_stats.extend(list(stats))
-
         return decompression_stats
 
     def benchmark_compress(self, algorithm):
@@ -115,21 +116,24 @@ class CompressionComparator():
         This method returns a list containing compression statistics. The list includes:
         - The name of the algorithm
         - The name of the compressed file
-        - Compression time in seconds
+        - The size of the file in bytes
+        - The size of the compressed file in bytes
         - Compression ratio %
-
+        - Compression time in seconds
+        
         The decompression time is set to 0.0, as it is not measured in this method.
 
         Args:
             algorithm (HuffanCoding or LZW): An algorithm to use for compression.
 
         Returns:
-            compression_stats (list): A list type of [str, str, float, float, float] containing the
-                                    compression statistics with the format [algorithm name,
-                                    filename, compression time, decompression time, 
-                                    compression ratio].
+            compression_stats (list): A list type of [str, str, float, float, float, float, float]
+                                    containing the compression statistics with the format
+                                    [algorithm name, filename, filesize, compressed file size,
+                                    compression ratio, compression time, decompression time]
         """
-        compression_stats = [algorithm.name, self.filehandler.filename]
+        compression_stats = [
+            algorithm.name, self.filehandler.filename, self.original_file_size / 1024]
         start_compress_time = time.time()
         self.compress(algorithm)
         end_compress_time = time.time()
@@ -139,7 +143,8 @@ class CompressionComparator():
         compression_ratio = (1 - compressed_file_size /
                              self.original_file_size) * 100
 
-        stats = (compression_time, 0.0, compression_ratio)
+        stats = (compressed_file_size / 1024,
+                 compression_ratio, compression_time, 0.0)
         compression_stats.extend(list(stats))
 
         return compression_stats

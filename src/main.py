@@ -21,8 +21,9 @@ def action_loop(ui, comparator, algorithm, table):
                                         and decompression.
         algorithm (HuffmanCoding or LZW): An algorithm object (HuffmanCoding or LZW).
         table (list): A list containing the compression statistics for each algorithm.
-                    Each list element is a list with the format [algorithm name, filename
-                    compression time, decompression time, compression ratio, filename]
+                    Each list element is a list with the format [algorithm name, filename,
+                    filesize, compressed filesize, compression ratio, compression time,
+                    decompression time
     """
 
     while True:
@@ -117,7 +118,7 @@ def update_table(statistics_table, new_stats):
     algorithm_name = new_stats[0]
     try:
         row = next(row for row in statistics_table if row[0] == algorithm_name)
-        for i in range(1, len(row)-1):
+        for i in range(4, len(row)):
             if new_stats[i] != 0:
                 row[i] = new_stats[i]
     except StopIteration:

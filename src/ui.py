@@ -140,28 +140,29 @@ class UI:
         """Print the table to the user.
 
         This method will create a prettyTable object that has field names
-        Algorithm, Compression time, Decompression time, compression ratio, filename.
-        Each algorithm that has not any None values are added to the table as a row.
-        If the algorithm has any None values, it is indicating a decompression error, and
-        it will be printed to the console.
+        Algorithm, Filename, Size, Compressed size, Compression ratio, Compression time,
+        Decompression time. Each algorithm that has not any None values are added to the table
+        as a row. If the algorithm has any None values, it is indicating a decompression error,
+        and it will be printed to the console.
 
         Args:
             compression_stats (list): A list containing the compression statistics for each 
                                     algorithm. Each list element is a list with the format
-                                    [algorithm name, filename, compression time,
-                                    decompression time, compression ratio]
+                                    [algorithm name, filename, filesize, compressed filesize,
+                                    compression ratio, compression time, decompression time]
         """
         table = PrettyTable()
-        table.field_names = ["Algorithm", "Filename", "Compression time (s)",
-                             "Decompression time (s)", "Compression ratio (%)"]
+        table.field_names = ["Algorithm", "Filename", "Size (kB)", "Compressed size (kB)",
+                             "Compression ratio (%)", "Compression time (s)",
+                             "Decompression time (s)"]
         table.float_format = ".4"
 
         for algorithm_stats in compression_stats:
             if algorithm_stats is not None:
-                if self.has_none_value(algorithm_stats[2:]):
+                if self.has_none_value(algorithm_stats[3:]):
                     algorithm_name = algorithm_stats[0]
                     print(
-                        f"Decompressed file size differs from the original "
+                        f"Decompressed filesize differs from the original "
                         f"with algorithm {algorithm_name}.")
                 table.add_row(algorithm_stats)
         print(str(table))
