@@ -111,3 +111,8 @@ class TestHuffmanCoding(unittest.TestCase):
         compressed_data = "010110010000011100000101000000000010000000001000010100000000010001001000000000100010101000000000100000110000000001000011000001010101010100001111111111110010010101010101"
         result = self.huffman.decompress(compressed_data)
         self.assertEqual(result, expected_result)
+
+    def test_set_min_bits(self):
+        huffman = HuffmanCoding()
+        huffman.set_min_bits_needed(16)
+        self.assertEqual(huffman.get_min_bits_needed(), 16)
