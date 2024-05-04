@@ -94,9 +94,10 @@ class TestLZW(unittest.TestCase):
     def test_calculate_min_bits_needed(self):
         lzw = LZW()
         lzw._init_table(compress=True)
-        min_bits_needed = calculate_min_bits_needed(max(lzw.get_table().values()))
+        min_bits_needed = calculate_min_bits_needed(
+            max(lzw.get_table().values()))
         self.assertEqual(min_bits_needed, 8)
-    
+
     def test_set_min_bits(self):
         lzw = LZW()
         lzw.set_min_bits_needed(16)

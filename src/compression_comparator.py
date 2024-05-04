@@ -132,11 +132,11 @@ class CompressionComparator():
                                     [algorithm name, filename, filesize, compressed file size,
                                     compression ratio, compression time, decompression time]
         """
-        compression_stats = [
-            algorithm.name, self.filehandler.filename, self.original_file_size / 1024]
         start_compress_time = time.time()
         self.compress(algorithm)
         end_compress_time = time.time()
+        compression_stats = [
+            algorithm.name, self.filehandler.filename, self.original_file_size / 1024]
         compression_time = end_compress_time - start_compress_time
 
         compressed_file_size = self.filehandler.get_file_size()
