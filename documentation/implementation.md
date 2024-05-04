@@ -43,7 +43,8 @@ Ohjelman toiminta on jaettu useampaan luokkaan, joilla on oma vastuualueensa.
 
 
 ## Huffman koodaus
-Huffmanin koodaus on luotu seuraavien pseudokoodien mukaisesti: 
+
+Omin sanoin selitettynä Huffmanin koodaus on luotu alla olevien pseudokoodien mukaisesti.
 
 ### Pakkaaminen
 
@@ -53,37 +54,37 @@ Pseudokoodi:
 2. Luodaan jokaisesta kirjaimesta oma solmu(kirjain, frekvenssi, vasenLapsi, oikeaLapsi)
 3. Lisätään solmut minimikekoon frekvenssin perusteella.
 4. Niin kauan kun minimikeossa on yksi tai useampi solmu:
-    - poista kaksi ensimmäistä solmua minimikeosta
+    - poista kaksi ensimmäistä solmua minimikeosta.
     - luo uusi solmu, jonka frekvenssi on yhdistettävien solmujen frekvenssien summa. Lisää yhdistetyt solmut uuden solmun lapsiksi.
-    - Lisää uusi solmu minimikekoon
+    - Lisää uusi solmu minimikekoon.
 5. Jäljelle jäänyt solmu on Huffmanin puun juuri.
-6. Muodostetaan huffmanin koodit kirjaimille:
+6. Muodostetaan Huffmanin koodit kirjaimille:
     - Aloitetaan puun juuresta ja asetetaan koodiksi tyhjä merkkijono
-    - Tutkitaan puuta rekursiivisesti:
-        - Jos solmulla on vasen lapsi, lisätään "0" huffmanin koodiin.
-        - Jos solmulla on oikea lapsi, lisätään "1" huffmanin koodiin.
-    - Kun saavutaan lehteen (eli solmuun, jossa kirjain), lisätään kirjain ja muodostettu huffmanin koodi sanakirjaan.
+    - Jos saavutaan lehteen, lisätään kirjain ja muodostettu Huffmanin koodi sanakirjaan.
+    - Muuten tutkitaan puuta rekursiivisesti:
+        - Jos solmulla on vasen lapsi, lisätään "0" tähän mennessä luotuun Huffmanin koodiin.
+        - Jos solmulla on oikea lapsi, lisätään "1" tähän mennessä luotuun Huffmanin koodiin.
 7. Koodataan teksti vastaamaan muodostettuja Huffmanin koodeja.
 8. Luodaan merkkijonoesitys, johon muodostettu puu on tallennettu.
 
 
 ### Purkaminen
 
-1. Luetaan bittejä tallennetusta huffmanin puun esitysmuodosta:
-    - Jos bitti on 1, luetaan seuraavat 16-bittiä ja saadaan kirjain. Luodaan uusi lehti, jolla ei ole lapsia.
+1. Luetaan bittejä tallennetusta Huffmanin puun esitysmuodosta ja luodaan Huffmanin puu uudelleen:
+    - Jos bitti on 1, luetaan seuraavat 16-bittiä ja saadaan kirjain. Luodaan uusi solmu, jolla ei ole lapsia.
     - Jos bitti on 0, tutkitaan rekursiivisesti samalla logiikalla molemmat lapsisolmut, ja luodaan uusi solmu asettaen lapsisolmut sille.
 2. Jäljelle jäänyt solmu on Huffmanin puun juuri.
-3. Muodostetaan huffmanin koodit kirjaimille:
-    - Aloitetaan puun juuresta ja asetetaan koodiksi tyhjä merkkijono
-    - Tutkitaan puuta rekursiivisesti:
-        - Jos solmulla on vasen lapsi, lisätään "0" huffmanin koodiin.
-        - Jos solmulla on oikea lapsi, lisätään "1" huffmanin koodiin.
-    - Kun saavutaan lehteen (eli solmuun, jossa kirjain), lisätään muodostettu huffmanin koodi ja kirjain sanakirjaan.
-4. Puretaan koodi korvaamalla huffmanin koodit niitä vastaavalla kirjaimella.
+3. Muodostetaan Huffmanin koodit kirjaimille:
+    - Aloitetaan puun juuresta ja asetetaan koodiksi tyhjä merkkijono.
+    - Jos saavutaan lehteen, lisätään muodostettu Huffmanin koodi ja kirjain sanakirjaan.
+    - Muuten tutkitaan puuta rekursiivisesti:
+        - Jos solmulla on vasen lapsi, lisätään "0" tähän mennessä luotuun Huffmanin koodiin.
+        - Jos solmulla on oikea lapsi, lisätään "1" tähän mennessä luotuun Huffmanin koodiin.
+4. Puretaan koodi korvaamalla Huffmanin koodit niitä vastaavalla kirjaimella.
 
 ## LZW
 
-Algoritmi on luotu seuraavien pseudokoodien mukaisesti.
+Algoritmit on luotu [GeeksForGeeks](https://www.geeksforgeeks.org/lzw-lempel-ziv-welch-compression-technique/)-sivuston pseudokoodin mukaisesti.
 
 ### Pakkaaminen
 
@@ -121,12 +122,20 @@ Algoritmi on luotu seuraavien pseudokoodien mukaisesti.
        OLD = NEW
     END WHILE
 
-
-
 ## Saavutetut aika- ja tilavaativuudet
 
-Huffman koodauksen aikavaativuus on O(n log n).
-LZW-algoritmin aikavaativuus on O(n).
+### Huffman
+
+Huffman koodauksen aikavaativuus on O(n log n), missä n on uniikkien merkkien lukumäärä. Huffmanin puun rakentamisessa poistetaan kaksi ensimmäistä alkiota minimikeosta ja yhdistetään ne luomalla uusi solmu, jonka frekvenssinä on näiden poistettujen alkioiden frekvenssien summa, ja lopuksi lisätään uusi solmu kekoon. Kun uusi solmu lisätään minimikekoon, sen aikavaativuus on O(log n). Alkioita yhdistetään n-1 kertaa yhteensä, joten kokonaisuudessaan aikavaativuudeksi saadaan O(n log n).
+
+Tilavaativuus on O(n), missä n on uniikkien merkkien lukumäärä.
+
+### LZW
+
+LZW-algoritmi käy läpi tekstisyötteen kirjain kerrallaan, joten kokonaisaikavaativuus on O(n), missä n on tekstin pituus.
+Algoritmin loopissa tapahtuvat sanakirja-operaatiot ovat aikavaativuudeltaan vakioita O(1), joten ne eivät vaikuta kokonaisaikavaativuuteen.
+
+Tilavaativuus on O(n), missä n on tekstin pituus.
 
 ## Parannusehdotukset
 
@@ -145,7 +154,6 @@ Projektin alkuvaiheessa hyödynsin myös tekoälyä tarkistamaan jotkin lauseet 
 Huffman-koodaus
 - [GeeksForGeeks](https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/)
 - [GeeksForGeeks](https://www.geeksforgeeks.org/time-and-space-complexity-of-huffman-coding-algorithm/)
-
 - [Wikipedia](https://en.wikipedia.org/wiki/Huffman_coding)
 
 Lempel-Ziv-Welch
