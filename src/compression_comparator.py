@@ -120,7 +120,7 @@ class CompressionComparator():
         - The size of the compressed file in bytes
         - Compression ratio %
         - Compression time in seconds
-        
+
         The decompression time is set to 0.0, as it is not measured in this method.
 
         Args:
