@@ -308,6 +308,7 @@ class HuffmanCoding:
         Returns:
             complete data (str): The complete data represented as a string of binary data.
         """
+        self.header = ""
         encoded_text = self.encode_text(text)
         self.encode_header(self.root)
         len_encoded_text = len(encoded_text)
