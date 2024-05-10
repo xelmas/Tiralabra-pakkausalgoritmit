@@ -52,8 +52,8 @@ class CompressionComparator():
         Returns:
             algorithm_stats (list): A list containing the compression statistics for each algorithm.
                                 Each list element is a list with the format [algorithm name,
-                                filename, filesize, compression ratio, compression time,
-                                decompression time]
+                                filename, filesize, compressed filesize, compression ratio,
+                                compression time, decompression time]
         """
 
         compression_stats = []
@@ -129,7 +129,7 @@ class CompressionComparator():
         Returns:
             compression_stats (list): A list type of [str, str, float, float, float, float, float]
                                     containing the compression statistics with the format
-                                    [algorithm name, filename, filesize, compressed file size,
+                                    [algorithm name, filename, filesize, compressed filesize,
                                     compression ratio, compression time, decompression time]
         """
         start_compress_time = time.time()
