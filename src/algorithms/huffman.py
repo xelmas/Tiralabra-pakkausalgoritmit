@@ -60,6 +60,7 @@ class HuffmanCoding:
         name (str): The name of the algorithm.
         prev_compress (bool): Indicates whether compression has occurred previously.
         min_bits (int): The minimum bits needed to represents the length of the header.
+        min_bits_char (int): The minimum bits needed to represents the largest unicode point value.
     """
 
     def __init__(self):
@@ -71,6 +72,7 @@ class HuffmanCoding:
         self.name = "Huffman"
         self.prev_compress = False
         self.min_bits = 0
+        self.min_bits_char = 0
 
     def create_frequency_dict(self, text):
         """Calculate the frequencies of characters in a text and return a dictionary.
@@ -80,7 +82,7 @@ class HuffmanCoding:
 
         Returns:
             frequency (dict): A dictionary where keys are characters found in the text
-            and values are the frequencies of those characters.
+                            and values are the frequencies of those characters.
         """
         frequency = {}
         for char in text:
@@ -89,6 +91,52 @@ class HuffmanCoding:
             frequency[char] += 1
 
         return frequency
+
+    def _find_largest_unicode_value(self, frequency_dict):
+        """Find the largest unicode point value from the frequency dictionary of the
+        characters in the text.
+
+        Args:
+            frequency_dict (dict): A dictionary where keys are characters found in the text
+                                 and values are the frequencies of those characters.
+
+        Returns:
+            largest_value (int): The largest unicode point value from the dictionary.
+        """
+        largest_value = max(ord(key) for key in frequency_dict.keys())
+        return largest_value
+
+    def set_min_bits_char(self, min_bits):
+        """Set min bits needed for representing the largest unicode point of the character.
+
+        Args:
+            min_bits (int): The minimum bits needed to represent the largest unicode point value.
+        """
+        self.min_bits_char = min_bits
+
+    def get_min_bits_char(self):
+        """Get minimum bits needed to represent the largest unicode point value.
+
+        Returns:
+            min_bits_char: The minimum bits needed to represent the largest unicode point value.
+        """
+        return self.min_bits_char
+
+    def _calculate_and_set_min_bits_for_char(self, frequency):
+        """Calculate and set min bits needed to represent the largest unicode point value of the
+        character.
+
+        This method calculates the minimum bits needed and rounds the value up to the nearest
+        multiple of 8, and stores the value to the attribute "self.min_bits_char".
+
+        Args:
+            frequency (dict): A dictionary where keys are characters found in the text
+                            and values are the frequencies of those characters.
+        """
+        max_unicode_point = self._find_largest_unicode_value(frequency)
+        min_bits_needed = calculate_min_bits_needed(max_unicode_point)
+        min_bits = self._round_min_bits_dividable_by_eight(min_bits_needed)
+        self.set_min_bits_char(min_bits)
 
     def create_min_heap(self, frequency_dict) -> list:
         """Create nodes for each character and push those nodes onto a priority queue (min heap)
@@ -150,6 +198,7 @@ class HuffmanCoding:
             root (Node): The root node of the constructed Huffman tree.
         """
         frequency = self.create_frequency_dict(text)
+        self._calculate_and_set_min_bits_for_char(frequency)
         min_heap = self.create_min_heap(frequency)
         self.merge_nodes(min_heap)
 
@@ -174,11 +223,11 @@ class HuffmanCoding:
                             constructed Huffman codes.
         """
         bit_string = ""
-        self.create_bit_string(self.root, bit_string)
+        self._create_bit_string(self.root, bit_string)
 
         return self.bit_strings
 
-    def create_bit_string(self, node, bit_string):
+    def _create_bit_string(self, node, bit_string):
         """Recursively creates bit strings for each character.
 
         Creates a bit string for each character in the tree that represents its encoding.
@@ -204,8 +253,8 @@ class HuffmanCoding:
             self.reverse_bit_strings[bit_string] = node.char
             return
 
-        self.create_bit_string(node.left, bit_string + "0")
-        self.create_bit_string(node.right, bit_string + "1")
+        self._create_bit_string(node.left, bit_string + "0")
+        self._create_bit_string(node.right, bit_string + "1")
 
     def encode_text(self, text):
         """Encode the given text using huffman codes.
@@ -229,7 +278,8 @@ class HuffmanCoding:
         The header is encoded with the following logic:
         if node is a leaf:
             - add "1".
-            - add binary representation of the character in 16 bits.
+            - add binary representation of the character (in the length of minimum bits required to
+            represent the largest unicode point value).
         Otherwise,
             - add "0".
             - encode recursively left and right child nodes.
@@ -239,7 +289,7 @@ class HuffmanCoding:
         """
         if node.is_leaf_node():
             self.header += "1"
-            self.header += format(ord(node.char), "016b")
+            self.header += format(ord(node.char), f"0{self.min_bits_char}b")
         else:
             self.header += "0"
             self.encode_header(node.left)
@@ -263,7 +313,7 @@ class HuffmanCoding:
         """
         return self.min_bits
 
-    def round_min_bits_dividable_by_eight(self, value):
+    def _round_min_bits_dividable_by_eight(self, value):
         """Round the minimum bits needed value to be dividable by 8.
 
         If the value is not dividable by 8, it is rounded up to the nearest multiple of 8.
@@ -278,7 +328,7 @@ class HuffmanCoding:
             value += (8 - value % 8)
         return value
 
-    def calculate_and_set_min_bits(self):
+    def _calculate_and_set_min_bits(self):
         """Calculate and set the minimum bits needed to represent the lenght of the header.
 
         This method calculates the minimum bits needed and rounds the value up to the nearest
@@ -286,7 +336,7 @@ class HuffmanCoding:
 
         """
         min_bits_needed = calculate_min_bits_needed(len(self.header))
-        min_bits = self.round_min_bits_dividable_by_eight(min_bits_needed)
+        min_bits = self._round_min_bits_dividable_by_eight(min_bits_needed)
         self.set_min_bits_needed(min_bits)
 
     def create_complete_data(self, text):
@@ -314,7 +364,7 @@ class HuffmanCoding:
         len_encoded_text = len(encoded_text)
 
         length_header = len(self.header)
-        self.calculate_and_set_min_bits()
+        self._calculate_and_set_min_bits()
         len_header_bin = format(length_header, f"0{self.min_bits}b")
 
         padding_len_header, padded_header = add_padding(
@@ -353,7 +403,6 @@ class HuffmanCoding:
         self.create_bit_strings_dict()
         complete_data = self.create_complete_data(text)
         self.prev_compress = True
-
         return complete_data
 
     def parse_int_from_binary(self, binary_string):
@@ -413,9 +462,9 @@ class HuffmanCoding:
         index += 1
 
         if bit == "1":
-            char_bits = header[index:index + 16]
+            char_bits = header[index:index + self.min_bits_char]
             char = chr(int(char_bits, base=2))
-            index += 16
+            index += self.min_bits_char
             node = Node(char)
         else:
             left_node, index = self.rebuild_huffman_tree(header, index)
