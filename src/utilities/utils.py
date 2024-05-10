@@ -1,4 +1,5 @@
 import math
+import os
 # Constants
 FILE_DIRECTORY = "src/textfiles"
 
@@ -34,3 +35,27 @@ def calculate_min_bits_needed(value):
     """
     bits_needed = math.ceil(math.log2(value + 1))
     return bits_needed
+
+
+def list_non_empty_text_files():
+    """Create a list of text files that can be compressed.
+
+    This method will go through all the files from the directory with the extension ".txt"
+    and adds the file to the list if its not empty.
+
+    Returns:
+         text_files (list): A list containing the file info for each file. Each list
+                            element is a list with the format [number, filename, filesize].
+    """
+    text_files = []
+    number = 0
+    for filename in os.listdir(FILE_DIRECTORY):
+        if filename.endswith(".txt"):
+            file_path = os.path.join(FILE_DIRECTORY, filename)
+            size = os.path.getsize(file_path) / 1024
+            if size > 0:
+                number += 1
+                text_file = [number, filename, size]
+                text_files.append(text_file)
+
+    return text_files

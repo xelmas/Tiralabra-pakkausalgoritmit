@@ -1,6 +1,5 @@
-import os.path
 from prettytable import PrettyTable
-from utilities.utils import FILE_DIRECTORY
+from utilities.utils import list_non_empty_text_files
 
 
 class UI:
@@ -21,29 +20,6 @@ class UI:
 
         print(str(table))
 
-    def list_non_empty_text_files(self):
-        """Create a list of text files that can be compressed.
-
-        This method will go through all the files from the directory with the extension ".txt"
-        and adds the file to the list if its not empty.
-
-        Returns:
-            text_files (list): A list containing the file info for each file. Each list
-                            element is a list with the format [number, filename, filesize].
-        """
-        text_files = []
-        number = 0
-        for filename in os.listdir(FILE_DIRECTORY):
-            if filename.endswith(".txt"):
-                file_path = os.path.join(FILE_DIRECTORY, filename)
-                size = os.path.getsize(file_path) / 1024
-                if size > 0:
-                    number += 1
-                    text_file = [number, filename, size]
-                    text_files.append(text_file)
-
-        return text_files
-
     def choose_file(self):
         """Choose a file to be compressed/decompressed.
 
@@ -55,7 +31,7 @@ class UI:
             filename (str): A filename of the chosen file.
         """
         print("\nAvailable files:")
-        text_files = self.list_non_empty_text_files()
+        text_files = list_non_empty_text_files()
         self.display_files(text_files)
 
         while True:

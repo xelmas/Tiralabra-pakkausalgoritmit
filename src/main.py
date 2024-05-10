@@ -1,6 +1,7 @@
 import sys
 from compression_comparator import CompressionComparator
 from utilities.filehandler import FileHandler
+from utilities.utils import list_non_empty_text_files
 from algorithms.huffman import HuffmanCoding
 from algorithms.lzw import LZW
 from ui import UI
@@ -145,7 +146,7 @@ def automatic_start():
 
     """
     ui = UI()
-    all_files = ui.list_non_empty_text_files()
+    all_files = list_non_empty_text_files()
 
     table = []
     ui.display_message("Calculating...")
