@@ -1,5 +1,5 @@
 import hypothesis.strategies as st
-from hypothesis import given, example
+from hypothesis import given
 import unittest
 import math
 
@@ -11,12 +11,30 @@ class TestInvariantLZW(unittest.TestCase):
     def setUp(self):
         pass
 
+    def _find_extra_symbols(self, text):
+        extra_supported_symbols = []
+        for char in text:
+            unicode = ord(char)
+            if unicode > 255 and char not in extra_supported_symbols:
+                extra_supported_symbols.append(char)
+
+        return extra_supported_symbols
+
     ascii_strings = st.text(alphabet=st.characters(
         min_codepoint=0, max_codepoint=255), min_size=1)
 
     @given(ascii_strings)
-    def test_compression_decompression_consistency(self, text):
+    def test_compression_decompression_consistency_without_extra_symbols(self, text):
         lzw = LZW()
+        compressed_text = lzw.compress(text)
+        decompressed_text = lzw.decompress(compressed_text)
+        assert decompressed_text == text
+
+    @given(st.text(min_size=1))
+    def test_compression_decompression_consistency_with_extra_symbols(self, text):
+        extra_supported_symbols = self._find_extra_symbols(text)
+        lzw = LZW()
+        lzw.set_extra_supported_symbols(extra_supported_symbols)
         compressed_text = lzw.compress(text)
         decompressed_text = lzw.decompress(compressed_text)
         assert decompressed_text == text

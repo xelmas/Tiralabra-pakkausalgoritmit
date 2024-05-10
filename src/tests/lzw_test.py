@@ -69,7 +69,7 @@ class TestLZW(unittest.TestCase):
     def test_extra_symbols_added_compression_table(self):
         lzw = LZW()
         extra_symbols = ["™", "“"]
-        expected_table = {i: chr(i) for i in range(256)}
+        expected_table = {chr(i): i for i in range(256)}
         code = 256
         for symbol in extra_symbols:
             expected_table[symbol] = code
@@ -77,6 +77,7 @@ class TestLZW(unittest.TestCase):
 
         lzw.set_extra_supported_symbols(extra_symbols)
         lzw._init_table(compress=True)
+        self.assertDictEqual(lzw.get_table(), expected_table)
 
     def test_extra_symbols_added_decompression_table(self):
         lzw = LZW()
@@ -102,3 +103,26 @@ class TestLZW(unittest.TestCase):
         lzw = LZW()
         lzw.set_min_bits_needed(16)
         self.assertEqual(lzw.get_min_bits_needed(), 16)
+
+    def test_text_is_same_after_compression_and_decompression(self):
+        text = "TOBEORNOTTOBEORTOBEORNOT"
+        lzw = LZW()
+        compressed_text = lzw.compress(text)
+        decompressed_text = lzw.decompress(compressed_text)
+        self.assertEqual(decompressed_text, text)
+
+    def test_text_is_same_after_compression_and_decompression2(self):
+        text = "AAAAAABCCCCCCDDEEEEE"
+        lzw = LZW()
+        compressed_text = lzw.compress(text)
+        decompressed_text = lzw.decompress(compressed_text)
+        self.assertEqual(decompressed_text, text)
+
+    def test_text_is_same_after_compression_and_decompression_with_large_unicode_value(self):
+        text = "𐀀"
+        extra_symbols = ["𐀀"]
+        lzw = LZW()
+        lzw.set_extra_supported_symbols(extra_symbols)
+        compressed_text = lzw.compress(text)
+        decompressed_text = lzw.decompress(compressed_text)
+        self.assertEqual(decompressed_text, text)
