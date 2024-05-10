@@ -14,13 +14,15 @@ Viime viikolla ongelmaksi koitui se, että millä arvoilla LZW-algoritmin sanaki
 
 Toteutus- ja testausdokumentit jäivät vielä kesken, joten niitä on tarkoitus ensi viikolla vielä täydentää.
 
+#### Tuntikirjanpito
 
-Tuntikirjanpito \
-21.4. 4h30min \
-22.4. 4h \
-23.4. 2h30min \
-24.4. 5h30min \
-25.4. 5h \
-26.4. 6h \
-27.4. 3h \
-Yhteensä: 30h 30min
+| Päivä       | Tuntimäärä (h) |
+| ----------- | -----------    |
+| 21.4.       | 4,5            |
+| 22.4.       | 4              |
+| 23.4.       | 2,5            |
+| 24.4.       | 5,5            |
+| 25.4.       | 5              |
+| 26.4.       | 6              |
+| 27.4.       | 3              |
+| Yhteensä    | 30,5           |

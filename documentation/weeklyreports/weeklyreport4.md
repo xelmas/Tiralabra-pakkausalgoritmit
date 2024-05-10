@@ -4,10 +4,13 @@ Tämä viikko on mennyt LZW-algoritmin toteuttamiseen. Koska edellisellä viikol
 
 Toteutusdokumentti on aloitettu. Ensi viikolla tarkoitus laajentaa CompressionComparator luokkaa, joka koostaa tietoa algoritmien suorituskyvystä ym. Tämän lisäksi pitäisi löytää jokin iso tekstitiedosto, jota käyttää testeissä, sillä nykyiset tiedostot ovat hyvin pieniä. Lisäksi testausta tulisi laajentaa, mutta se voi olla, että siirtyy vielä viikolla eteenpäin.
 
-Tuntikirjanpito: \
-8.4. 1h \
-9.4. 5h \
-10.4. 4h \
-11.4. 5h \
-12.4. 4h \
-Yhteensä: 19 tuntia.
+#### Tuntikirjanpito
+
+| Päivä       | Tuntimäärä (h) |
+| ----------- | -----------    |
+| 8.4.        | 1              |
+| 9.4.        | 5              |
+| 10.4.       | 4              |
+| 11.4.       | 5              |
+| 12.4.       | 4              |
+| Yhteensä    | 19             |

@@ -6,12 +6,16 @@ mutta myös itse Huffman-koodauksen pakkausalgoritmin olen saanut aloitettua. Ke
 On vaikea sanoa täysin varmasti, että pakkausalgoritmi toimi oikein, sillä en ole vielä kehittänyt purkualgoritmia. Seuraavana vuorossa onkin luoda jonkinlainen purkualgoritmi, jotta varmistutaan siitä, että pakkausalgoritmikin toimii oikein.
 Tämän jälkeen ajattelin keskittyä siihen, miten pakata data tehokkaasti tiedostoon.
 
-Tuntikirjanpito: \
-16.3. 2h \
-18.3. 5h \
-19.3. 4h \
-20.3. 4h \
-21.3. 4h \
-22.3. 2h \
-23.3. 1h \
-Yhteensä 22 tuntia.
+
+#### Tuntikirjanpito
+
+| Päivä       | Tuntimäärä (h) |
+| ----------- | -----------    |
+| 16.3.       | 2              |
+| 18.3.       | 5              |
+| 19.3.       | 4              |
+| 20.3.       | 4              |
+| 21.3.       | 4              |
+| 22.3.       | 2              |
+| 23.3.       | 1              |
+| Yhteensä    | 22             |

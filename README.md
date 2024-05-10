@@ -15,8 +15,8 @@ Kurssi aineopintojen harjoitustyö: Algoritmit ja tekoäly.
 [Viikkoraportti 3](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport3.md) \
 [Viikkoraportti 4](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport4.md) \
 [Viikkoraportti 5](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport5.md) \
-[Viikkoraportti 6](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport6.md) 
-
+[Viikkoraportti 6](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport6.md) \
+[Viikkoraportti 7](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/weeklyreports/weeklyreport7.md) 
 
 ## Asennusohjeet
 1. Varmista, että poetry on asennettu komennolla ```poetry --version```

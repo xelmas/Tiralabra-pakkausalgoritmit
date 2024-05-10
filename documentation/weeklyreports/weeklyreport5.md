@@ -8,11 +8,14 @@ Kysymys ohjaajalle liittyen ylläolevaan kappaleeseen: Onko hyväksyttävää lu
 
 Ensi viikolla tarkoitus ainakin lisätä testejä, kuten invarianttitestaus LZW-luokasta ja refaktoroida koodia.
 
-Tuntikirjanpito \
-15.4. 2h30min \
-16.4. 3h \
-17.4. 3h \
-18.4. 5h \
-19.4. 5h \
-20.4. 4h \
-Yhteensä: 22h30min
+#### Tuntikirjanpito
+
+| Päivä       | Tuntimäärä (h) |
+| ----------- | -----------    |
+| 15.4.       | 2,5            |
+| 16.4.       | 3              |
+| 17.4.       | 3              |
+| 18.4.       | 5              |
+| 19.4.       | 5              |
+| 20.4.       | 4              |
+| Yhteensä    | 22,5           |
