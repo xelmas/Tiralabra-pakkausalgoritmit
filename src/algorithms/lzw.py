@@ -122,7 +122,7 @@ class LZW():
     def create_header(self, code_values: list) -> str:
         """Create a complete header data with a string representation of binary data.
 
-        This method calculates the minimum number of bits needed to represent the biggest value in
+        This method calculates the minimum number of bits needed to represent the largest value in
         the table. It then converts each code value in the "code_values" list to a binary
         representation with the minimum required length and concatenates them into a single string.
 
@@ -164,7 +164,7 @@ class LZW():
 
         Args:
             bits_needed (int): The integer value of minimum bits needed to represent
-                            the biggest value.
+                            the largest value.
         """
         self.min_bits = bits_needed
 
@@ -173,7 +173,7 @@ class LZW():
 
         Returns:
             min_bits (int): The integer value of minimum bits needed to represent
-                            the biggest value.
+                            the largest value.
         """
         return self.min_bits
 
