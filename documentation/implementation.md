@@ -2,10 +2,12 @@
 
 ## Yleisrakenne
 
-Ohjelman rakenne on seuraava:
-- algorithms-kansio: sisältää algoritmien lähdekoodit.
-- textfiles-kansio: sisältää pakattavat teksitiedostot ja väliaikaiset tiedostot, kuten pakkaamisen yhteydessä luotu binääritiedosto ja purettu tiedosto decompressed.txt. Molemmat tiedostot poistetaan ohjelman suorituksen päätyttyä.
-- utilities-kansio: sisältää tiedostojen käsittelijän lähdekoodin ja useamman moduulin hyödyntämät muuttujat ja apufunktiot.
+Ohjelman pakkausrakenne on seuraava:
+- algorithms: sisältää algoritmien lähdekoodit.
+- textfiles: sisältää pakattavat teksitiedostot ja väliaikaiset tiedostot, kuten pakkaamisen yhteydessä luotu binääritiedosto ja purettu tiedosto decompressed.txt. Molemmat tiedostot poistetaan ohjelman suorituksen päätyttyä.
+- tests: sisältää automaatiotestit ja yksikkötestit.
+- utilities: sisältää tiedostojen käsittelijän lähdekoodin ja useamman moduulin hyödyntämät muuttujat ja apufunktiot.
+- juuressa on ohjelman käyttöliittymän, toimintalogiikan ja algoritmien käsittelystä vastaavien tiedostojen lähdekoodit.
 ```
 src/
 │
@@ -19,10 +21,15 @@ src/
 │   └── sample_decompressed.txt
 │
 ├── tests/
-│   ├── huffman_invariant_test.py
-│   ├── huffman_test.py
-│   ├── lzw_invariant_test.py
-│   ├── lzw_test.py
+│   ├── automatic/
+│   │    └── compression_comparator_automatic_test.py
+│   │
+│   ├── unit/
+│       ├── compression_comparator_test.py
+│       ├── huffman_invariant_test.py
+│       ├── huffman_test.py
+│       ├── lzw_invariant_test.py
+│       └── lzw_test.py
 │
 ├── utils/
 │   ├── filehandler.py
@@ -35,16 +42,17 @@ src/
 ## Luokkien toiminta
 
 Ohjelman toiminta on jaettu useampaan luokkaan, joilla on oma vastuualueensa.
-- UI: kommunikoi käyttäjän kanssa.
-- FileHandler: suorittaa kaikki tiedostoihin liittyvät operaatiot.
-- HuffmanCoding: toteuttaa Huffman koodauksen pakkaus- ja purkualgoritmit.
-- LZW: toteuttaa Lempel-Ziv-Welchin pakkaus- ja purkualgoritmit.
-- CompressionComparator: vertailee algoritmien suorituskykyä keskenään.
+- `UI`: kommunikoi käyttäjän kanssa.
+- `FileHandler`: suorittaa kaikki tiedostoihin liittyvät operaatiot.
+- `HuffmanCoding`: toteuttaa Huffman koodauksen pakkaus- ja purkualgoritmit.
+- `LZW`: toteuttaa Lempel-Ziv-Welchin pakkaus- ja purkualgoritmit.
+- `CompressionComparator`: suorittaa pakkaamisen/purkamisen ja vertailee algoritmien suorituskykyä keskenään.
 
+Ohjelman toimintalogiikka toteutetaan main-tiedostossa.
 
 ## Huffman koodaus
 
-Omin sanoin selitettynä Huffmanin koodaus on luotu alla olevien pseudokoodien mukaisesti.
+Omin sanoin selitettynä Huffman koodaus on luotu alla olevien pseudokoodien mukaisesti.
 
 ### Pakkaaminen
 
@@ -139,7 +147,9 @@ Tilavaativuus on O(n), missä n on tekstin pituus.
 
 ## Parannusehdotukset
 
-Käyttöliittymä voisi olla graafinen ja olla mahdollisuus myös lisätä uusia teksitiedostoja.
+Käyttöliittymän voisi olla graafinen. Lisäksi taulukkoon voisi lisätä kokonaisajan, mikä algoritmilla kuluu suorittaa sekä pakkaaminen että purkaminen. Tällä hetkellä taulukossa on molemmat ajat eroteltuna. 
+
+Vertaisarvioijalta tuli hyvä ehdotus, että olisi mielenkiintoista verrata miten algoritmit suoriutuvat, kun tekstistä tiedetään jonkinlainen toisteisuuden arvo. Kokeilin tätä arvoa laskea Shannonin entropian avulla, ja se antoi ihan mielenkiintoisia tuloksia, mutta tätä ajatusta voisi kehittää lisää. Myös algoritmeja voisi kokeilla vielä paljon isommilla tiedostoilla, koska tällä hetkellä suurin testattava on noin 3 MB.
 
 ## Kielimallien käyttö
 
