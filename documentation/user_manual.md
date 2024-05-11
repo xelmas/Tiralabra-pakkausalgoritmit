@@ -19,12 +19,25 @@ poetry run invoke start --function automatic_start
 
 ## Testien ajaminen
 
-### Suorittaa testit:
+### Suorittaa yksikkötestit:
+```
+poetry run invoke unit-tests
+```
+
+### Suorittaa automaattitestit:
+Automaattitestit suorittavat testit kaikille tekstitiedostoille, joten tämä vie noin 25 sekuntia.
+```
+poetry run invoke automatic-tests
+```
+
+### Suorittaa kaikki testit:
+Suorittaa sekä automaatti- että yksikkötestit, joten tämä vie noin 30 sekuntia.
 ```
 poetry run invoke test
 ```
 
-### Luo testikattavuusraportin:
+### Luo testikattavuusraportin kaikille testeille:
+Suorittaa sekä automaatti- että yksittötestit ja luo raportin, joten tämä vie noin 70 sekuntia.
 ```
 poetry run invoke coverage-report
 ```

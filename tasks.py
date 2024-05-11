@@ -20,6 +20,14 @@ def test(ctx):
     ctx.run("pytest src", pty=pty)
 
 @task
+def unit_tests(ctx):
+    ctx.run("pytest src/tests/unit", pty=pty)
+
+@task
+def automatic_tests(ctx):
+    ctx.run("pytest src/tests/automatic", pty=pty)
+
+@task
 def coverage(ctx):
     ctx.run("coverage run --branch -m pytest src", pty=pty)
 

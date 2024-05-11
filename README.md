@@ -30,7 +30,7 @@ Kurssi aineopintojen harjoitustyö: Algoritmit ja tekoäly.
 poetry run invoke start --function start
 ```
 
-### Käynnistää sovelluksen ja ajaa pakkaus- ja purkualgoritmin kaikille tiedostoille automaattisesti
+### Käynnistää sovelluksen ja ajaa pakkaus- ja purkualgoritmin kaikille tiedostoille automaattisesti:
 ```
 poetry run invoke start --function automatic_start
 ```
@@ -40,12 +40,22 @@ poetry run invoke start --function automatic_start
 poetry run invoke lint
 ```
 
-### Suorittaa testit:
+### Suorittaa yksikkötestit:
+```
+poetry run invoke unit-tests
+```
+
+### Suorittaa automaattitestit:
+```
+poetry run invoke automatic-tests
+```
+
+### Suorittaa kaikki testit:
 ```
 poetry run invoke test
 ```
 
-### Luo testikattavuusraportin:
+### Luo testikattavuusraportin kaikille testeille:
 ```
 poetry run invoke coverage-report
 ```
