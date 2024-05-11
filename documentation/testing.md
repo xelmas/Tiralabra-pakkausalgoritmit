@@ -4,9 +4,29 @@
 
 Yksikkötesteillä on testattu testidatan avulla yksittäisten funktioiden toimintaa Huffman- ja LZW-luokista. Yksikkötesteihin on lisätty myös utilities-tiedoston apufunktioiden toiminnan testaus molemmilla algoritmeilla sekä CompressionComparator luokan toiminta. Testikattavuuden ulkopuolelle on jätetty käyttöliittymäluokka UI sekä toimintalogiikan toteutus main-tiedostosta. Näiden testaaminen ei ole mielekästä tässä projektissa.
 
-Yksikkötesteillä on testattu, että pakattu ja sitten purettu tekstitiedosto on täysin samankokoinen ja -sisältöinen kuin alkuperäinen. Lisäksi on testattu, että ohjelma ei yritä purkaa tai pakata tyhjää tiedostoa.
+Yksikkötesteillä on testattu, että pakattu ja sitten purettu teksti on täysin samansisältöinen molemmilla algoritmeilla kuin alkuperäinen teksti. Lisäksi on testattu, että ohjelma ei yritä purkaa tai pakata tyhjää tekstiä. Lisäksi on testattu, että pakattavassa muodossa oleva tietue on samankokoinen, vaikka samaa tekstiä pakataan useamman kerran peräkkäin.
 
-CompressionComparator-luokan compare-metodin toiminta on testattu molemmilla algoritmeilla palauttavan statistiikat odotetunlaisesti eikä purkamisen yhteydessä ole tapahtunut virhettä. Lisäksi on testattu, että ainoastaan ei-tyhjät tekstitiedostot valitaan listaan pakattavaksi.
+#### HuffmanCoding-luokka
+
+Mikäli tekstitiedosto on vain yhden merkin mittainen, on testattu, että Huffmanin koodi kyseiselle merkille on oletusarvoisesti "0". 
+
+Huffmanin puun luontiin tarvittavat metodit, eli sanakirjan luonti kirjainten esiintyvyystiheydestä ja sen avulla minimikeon luonti ja solmujen yhdistäminen on testattu toimivan oikein. Yksikkötesteillä on testattu, että alussa minimikeon ensimmäinen solmu ja sen frekvenssi vastaavat odotettuja arvoja. Lisäksi minimikeon solmujen yhdistäminen on testattu toimivan oikein, koska jäjelle jääneen Huffmanin puun juuren frekvenssiarvo on todettu vastaavan odotettua. Lisäksi on testattu, että Huffmanin koodit vastaavat odotettuja arvoja annetulla testisyötteellä.
+
+Yksikkötesteillä on myös testattu, että pakattu teksti ja tietue Huffmanin puusta on muodostettu oikein annetulla testisyötteellä. Lisäksi näiden yhdistelmästä muodostettu tietue, joka kirjoitetaan tiedostoon, on testattu vastaavan odotettua. Lisäksi on testattu, että tästä kokonaistietueesta saadaan parsittua tiedot ulos ja ne vastaavat samoja arvoja kuin pakatessa. Myös puretun tekstin avulla muodostetun Huffmanin puun juuri on testattu olevan sama kuin pakatessakin.
+
+Yksikkötesteillä on testattu, että kokonaistietueen koko määrittää oikein minimilukumäärän kuinka monella bitillä kyseinen tieto tulee vähintään ilmaista. Lisäksi on testattu, että myös suurin unicode-arvo määrittää oikein kuinka monella bittimäärällä vähintään jokainen kirjain on tallennettava tietueeseen.
+
+#### LZW-luokka
+
+LZW:n sanakirjan alustus on testattu yksikkötesteillä toimivan oikein sekä pakkaamisen että purkamisen yhteydessä. Ennen pakkaamista muodostettu sanakirja on testattu koostuvan kirjaimista ja niitä vastaavista koodeista, ja purkamista varten muodostettu sanakirja on muodostettu koostuvan koodeista ja niitä vastaavista kirjaimista. Lisäksi on testattu, että sanakirjoihin alustetaan ekstramerkit, mikäli sellaisia on.
+
+Yksikkötesteillä on myös testattu, että pakattu teksti on muodostettu oikein listaan, joka koostuu numeroista, jotka vastaavat tekstisyötteen merkkejä/sekvenssejä. On testattu, että numerot muutetaan binääriesitysmuotoon ja muodostetaan kokonaistietue odotetulla tavalla. Lisäksi on testattu, että tästä kokonaistietueesta saadaan parsittua tiedot ulos ja ne vastaavat samoja arvoja kuin pakatessa. Puretusta datasta muodostettu lista on testattu olevan sama kuin pakatessakin muodostettu lista, ja että purkamisen yhteydessä muodostettu teksti vastaa alkuperäistä.
+
+Yksikkötesteillä on testattu, että suurin sanakirjan lukuarvo kuinka monella bittimäärällä vähintään jokainen numero on tallennettava tietueeseen määritetään oikein.
+
+#### CompressionComparator-luokka
+
+Yksikkötesteillä on testattu compare-metodin toiminta molemmilla algoritmeilla. Metodin on testattu palauttavan statistiikat odotetunlaisesti eikä purkamisen yhteydessä ole tapahtunut virhettä. Lisäksi on testattu, että ainoastaan ei-tyhjät tekstitiedostot valitaan listaan pakattavaksi.
 
 ## Invarianttitestaus
 
@@ -14,7 +34,7 @@ CompressionComparator-luokan compare-metodin toiminta on testattu molemmilla alg
 
 Huffman-luokan toimintaa on testattu käyttäen Hypothesis-kirjastoa invarianttitestaukseen. Invarianttitestauksella on luotu erilaisia ja eripituisia merkkijonoja, ja on testattu, että Huffman koodauksen algoritmi luo sanakirjan kirjainten esiintyvyystiheydestä oikein kaikilla syötteillä. Invarianttitestauksella on myös testattu, että erilaiset sanakirjat kirjainten esiintyvyystiheydestä muodostavat minimikeon yhdenmukaisesti.
 
-Molempiin testeihin on lisätty example-arvot, jotka testataan aina testien suorituksen yhteydessä. Tässä tapauksessa testataan, että sanakirja ja minimikeko luodaan yhdenmukaisesti, vaikka teksitiedosto olisi vain yhden merkin mittainen. Myös solmujen yhdistäminen on testattu, jotta Huffmanin puu luodaan yhdenmukaisesti. Testit varmistavat myös, että tietue Huffmanin puusta on minimibittien lukumäärän pituinen. Tämä on testattu erilaisilla tekstisyötteillä, että puun tallennukseen tarvittava bittimäärä on yhdenmukainen, eikä uudelleenpakkaaminen kasvata tiedoston kokoa. 
+Molempiin testeihin on lisätty example-arvot, jotka testataan aina testien suorituksen yhteydessä. Tässä tapauksessa testataan, että sanakirja ja minimikeko luodaan yhdenmukaisesti, vaikka teksitiedosto olisi vain yhden merkin mittainen. Myös solmujen yhdistäminen on testattu, jotta Huffmanin puu luodaan yhdenmukaisesti. Testit varmistavat myös, että tietue Huffmanin puusta on minimibittien lukumäärän pituinen. Tämä on testattu erilaisilla tekstisyötteillä, että puun tallennukseen tarvittava bittimäärä on yhdenmukainen, eikä uudelleenpakkaaminen kasvata tietueen kokoa. 
 
 Algoritmin pakkaus- ja purku on testattu yhdenmukaiseksi erilaisilla syötteillä. Eli syötteenä saatu teksti pakataan ja se on purkamisen jälkeen täsmälleen samanlainen kuin ennen pakkaamista.
 
@@ -24,7 +44,7 @@ LZW-luokan toimintaa on testattu käyttäen Hypothesis-kirjastoa invarianttitest
 
 ## Automaatiotestit
 
-CompressionComparator-luokan automaatiotestit suorittavat pakkaus- ja purkualgoritmit kaikille tekstitiedostoille. Testeissä testataan, että pakkaus- ja purkustatistiikat ovat odotetunlaisia eikä purkamisen yhteydessä ole tapahtunut virhettä. Testeissä varmistetaan myös, että purkamisaika tallennetaan taulukkoon oikein pakkaamisen jälkeen. 
+CompressionComparator-luokan automaatiotestit suorittavat pakkaus- ja purkualgoritmit kaikille tekstitiedostoille. Testeissä testataan, että pakkaus- ja purkustatistiikat ovat odotetunlaisia eikä purkamisen yhteydessä ole tapahtunut virhettä. Testeissä varmistetaan myös, että purkamisaika tallennetaan taulukkoon oikein pakkaamisen jälkeen ja, että purettu tiedosto on täsmälleen samankokoinen kuin alkuperäinen tiedosto.
 
 ## Testikattavuusraportti
 
@@ -32,7 +52,7 @@ CompressionComparator-luokan automaatiotestit suorittavat pakkaus- ja purkualgor
 
 ## Mitä testattu ja mitä havaitaan?
 
-Taulukoituna kaikkien tekstitiedostojen pakkaus- ja purkustatistiikat käyttäen Huffman koodausta ja LZW-algoritmia.
+Taulukoituna yhden testiajon tekstitiedostojen pakkaus- ja purkustatistiikat käyttäen Huffman koodausta ja LZW-algoritmia.
 
 |                                |           |   Huffman       |                |                  | LZW            |                |                  |
 |------------------------------- |-----------|-----------------|----------------|------------------|----------------|----------------|------------------|
@@ -54,7 +74,7 @@ Taulukoituna kaikkien tekstitiedostojen pakkaus- ja purkustatistiikat käyttäen
 
 Taulukko kertoo sen, että pakkaus- ja purkualgoritmit ovat onnistuneesti suoritettu kaikilla tiedostoilla, ja purettu tiedosto on täysin samanlainen kuin alkuperäinen tiedosto. Mikäli virhe olisi tapahtunut, olisi algoritmin statistiikkasarakkeissa arvoina "None", "None", "None".
 
-Yleisesti voidaan sanoa, että LZW-algoritmi suoriutuu paremmin kuin Huffman koodaus tällä testidatalla. Kun jätetään pienet tiedostot huomiotta, Huffman koodauksen pakkausteho vaihtelee 41-60 % välillä ja LZW:n pakkausteho 55-71 % välillä. Mielenkiintoista on myös havaita, että Huffman koodaus suoriutuu pakkaamisesta lähes kaksi kertaa nopeammin kuin LZW, kun taas LZW suorittaa purkamisen noin puolet nopeammin kuin Huffman koodaus. Kokonaisaikaa tarkasteltuna Huffman koodaus on kuitenkin nopeampi kuin LZW kaikilla testitapauksilla.
+Yleisesti voidaan sanoa, että LZW-algoritmi suoriutuu paremmin kuin Huffman koodaus tällä testidatalla. Kun jätetään pienet tiedostot huomiotta, Huffman koodauksen pakkausteho vaihtelee 41-60 % välillä ja LZW:n pakkausteho 55-71 % välillä. Mielenkiintoista on myös havaita, että Huffman koodaus suoriutuu pakkaamisesta lähes kaksi kertaa nopeammin kuin LZW, kun taas LZW suorittaa purkamisen noin puolet nopeammin kuin Huffman koodaus. Kokonaisaikaa tarkasteltuna Huffman koodaus on kuitenkin nopeampi kuin LZW kaikilla testitapauksilla. Ero selittyy sillä, että pakkaamisvaiheessa LZW:llä menee aikaa sanakirjan päivittämiseen ja laajentamiseen, kun taas Huffmanin puun luominen minimikeon avulla on nopeaa.
 
 Englanninkieliset teokset "epic_poem_of_finland", "les_miserables" ja "monte_cristo" ovat valittu testidataan, koska ne ovat suuria luonnollista kieltä sisältäviä tiedostoja. Algoritmit suoriutuvat teosten pakkaamisesta suhteellisen hyvin, tosin LZW huomattavan paljon tehokkaammin.
 

@@ -55,18 +55,18 @@ Kun tiedosto on valittu, käyttäjälle tulostetaan valitun tiedoston nimi ja se
 ![algoritmin valinta](https://github.com/xelmas/Tiralabra-pakkausalgoritmit/blob/main/documentation/images/choose_algorithm.png)
 
 Vaihtoehdot ovat:
-H: käytetään Huffman koodaus -algoritmia.
-L: käytetään LZW-algoritmia.
-C: käytetään molempia algoritmeja.
-E: poistutaan valikosta.
+- H: käytetään Huffman koodaus -algoritmia.
+- L: käytetään LZW-algoritmia.
+- C: käytetään molempia algoritmeja.
+- E: poistutaan valikosta.
 
 ### Yksittäisen algoritmin valinta
 
 Mikäli käyttäjä valitsee vaihtoehdon "H" tai "L", pyydetän käyttäjää valitsemaan toiminto.
 Vaihtoehdot ovat:
-C: pakataan tiedosto valitulla algoritmilla.
-D: puretaan tiedosto valitulla algoritmilla.
-E: poistutaan valikosta.
+- C: pakataan tiedosto valitulla algoritmilla.
+- D: puretaan tiedosto valitulla algoritmilla.
+- E: poistutaan valikosta.
 
 Esimerkkitapauksessamme käyttäjä valitsee ensin algoritmiksi "H", eli Huffman koodauksen. Tämän jälkeen käyttäjä valitsee "C", eli tiedosto pakataan. Sovellus suorittaa pakkaamisen ja tulostaa statistiikat käyttäjälle konsoliin.
 

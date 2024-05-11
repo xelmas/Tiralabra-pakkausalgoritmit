@@ -20,9 +20,8 @@ Testejä on lisätty ja päivitetty muutosten myötä. CompressionComparator-luo
 | 8.5.        | 3           |
 | 9.5.        | 2,5         |
 | 10.5.       | 7           |
-| 11.5.       |             |
-| Yhteensä    |    25       |
-
+| 11.5.       | 3           |
+| Yhteensä    | 28          |
 
 
 #### Tuntikirjanpito
@@ -36,5 +35,5 @@ Koko kurssiin käytetyt työtuntimäärät viikoittain.
 | 4           | 19          |
 | 5           | 22,5        |
 | 6           | 30,5        |
-| 7           |             |
-| Yhteensä    |             |
+| 7           | 28          |
+| Yhteensä    | 148         |

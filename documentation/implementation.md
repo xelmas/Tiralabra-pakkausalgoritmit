@@ -22,9 +22,9 @@ src/
 │
 ├── tests/
 │   ├── automatic/
-│   │    └── compression_comparator_automatic_test.py
+│   │   └── compression_comparator_automatic_test.py
 │   │
-│   ├── unit/
+│   └── unit/
 │       ├── compression_comparator_test.py
 │       ├── huffman_invariant_test.py
 │       ├── huffman_test.py
@@ -55,8 +55,6 @@ Ohjelman toimintalogiikka toteutetaan main-tiedostossa.
 Omin sanoin selitettynä Huffman koodaus on luotu alla olevien pseudokoodien mukaisesti.
 
 ### Pakkaaminen
-
-Pseudokoodi:
 
 1. Lasketaan kirjainten frekvenssit tekstistä.
 2. Luodaan jokaisesta kirjaimesta oma solmu(kirjain, frekvenssi, vasenLapsi, oikeaLapsi)
@@ -159,7 +157,7 @@ Koska käytetyt algoritmit eivät olleet minulle entuudestaan tuttuja, pyysin my
 
 Projektin alkuvaiheessa hyödynsin myös tekoälyä tarkistamaan jotkin lauseet doctsringeistä, joiden kieliopin oikeellisuutta epäilin. Projektin edetessä en kokenut tälle enää tarvetta, sillä selkeästi tietynlainen rutiini tähän kehittyi ja usko omaan osaamiseen ilmeisesti kasvoi. Tämä oli ehkä suurin tekoälyn tuottama hyöty tässä projektissa, muutoin siitä ei ollut kauheasti hyötyä.
 
-### Viitteet
+## Viitteet
 
 Huffman-koodaus
 - [GeeksForGeeks](https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/)
