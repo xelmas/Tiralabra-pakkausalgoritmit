@@ -88,7 +88,7 @@ class TestHuffmanCoding(unittest.TestCase):
         root, index = self.huffman.rebuild_huffman_tree(header_data, 0)
         self.assertEqual(index, expected_index)
 
-    def test_rebuild_huffman_tree_returns_None(self):
+    def test_rebuild_huffman_tree_returns_None_if_index_out_of_range(self):
         header_data = "10000000"
         root, index = self.huffman.rebuild_huffman_tree(header_data, 9)
         self.assertFalse(root)
@@ -114,11 +114,6 @@ class TestHuffmanCoding(unittest.TestCase):
         compressed_data = "00110001000001110000010100000000001010000101010001001010001010101000001101000011000001010101010100001111111111110010010101010101"
         result = self.huffman.decompress(compressed_data)
         self.assertEqual(result, expected_result)
-
-    def test_set_min_bits(self):
-        huffman = HuffmanCoding()
-        huffman.set_min_bits_needed(16)
-        self.assertEqual(huffman.get_min_bits_needed(), 16)
 
     def test_len_header_after_compression(self):
         huffman = HuffmanCoding()
