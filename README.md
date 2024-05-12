@@ -25,37 +25,46 @@ Kurssi aineopintojen harjoitustyö: Algoritmit ja tekoäly.
 
 ## Komentorivitoiminnot
 
-### Käynnistää sovelluksen interaktiivisen käyttöliittymän:
+Sovellus voidaan käynnistää interaktiivisessa tai ei-interaktiivisessa versiossa.
+
+### Sovelluksen käynnistys
+
+#### Käynnistää sovelluksen interaktiivisen käyttöliittymän:
 ```
 poetry run invoke start --function start
 ```
 
-### Käynnistää sovelluksen ja ajaa pakkaus- ja purkualgoritmin kaikille tiedostoille automaattisesti:
+#### Käynnistää sovelluksen ja ajaa pakkaus- ja purkualgoritmin kaikille tiedostoille automaattisesti:
 ```
 poetry run invoke start --function automatic_start
 ```
 
-### Suorittaa pylint-tarkistuksen:
-```
-poetry run invoke lint
-```
+### Testien käynnistys
 
-### Suorittaa yksikkötestit:
+Testit voidaan ajaa joko kaikki kerralla tai valita suoritettavaksi joko yksikkötestit tai automaatiotestit.
+
+#### Suorittaa yksikkötestit:
 ```
 poetry run invoke unit-tests
 ```
 
-### Suorittaa automaattitestit:
+#### Suorittaa automaatiotestit:
 ```
 poetry run invoke automatic-tests
 ```
 
-### Suorittaa kaikki testit:
+#### Suorittaa kaikki testit:
 ```
 poetry run invoke test
 ```
 
-### Luo testikattavuusraportin kaikille testeille:
+#### Luo testikattavuusraportin kaikille testeille:
 ```
 poetry run invoke coverage-report
+```
+### Muut komennot
+
+#### Suorittaa pylint-tarkistuksen:
+```
+poetry run invoke lint
 ```
