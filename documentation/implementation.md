@@ -147,7 +147,9 @@ Tilavaativuus on O(n), missä n on tekstin pituus.
 
 Käyttöliittymän voisi olla graafinen. Lisäksi taulukkoon voisi lisätä kokonaisajan, mikä algoritmilla kuluu suorittaa sekä pakkaaminen että purkaminen. Tällä hetkellä taulukossa on molemmat ajat eroteltuna. 
 
-Vertaisarvioijalta tuli hyvä ehdotus, että olisi mielenkiintoista verrata miten algoritmit suoriutuvat, kun tekstistä tiedetään jonkinlainen toisteisuuden arvo. Kokeilin tätä arvoa laskea Shannonin entropian avulla, ja se antoi ihan mielenkiintoisia tuloksia, mutta tätä ajatusta voisi kehittää lisää. Myös algoritmeja voisi kokeilla vielä paljon isommilla tiedostoilla, koska tällä hetkellä suurin testattava on noin 3 MB.
+Vertaisarvioijalta tuli hyvä ehdotus, että olisi mielenkiintoista verrata miten algoritmit suoriutuvat, kun tekstistä tiedetään jonkinlainen toisteisuuden arvo. Kokeilin tätä arvoa laskea Shannonin entropian avulla, ja se antoi ihan mielenkiintoisia tuloksia, mutta tätä ajatusta voisi kehittää lisää. Myös algoritmeja voisi kokeilla vielä paljon isommilla tiedostoilla, koska tällä hetkellä suurin testattava on noin 3 MB. 
+
+Lisäksi voisi lisätä mahdollisuuden käyttäjälle konfiguroida algoritmien parametrejä. Esimerkiksi LZW-algoritmin yhteydessä olisi mahdollisuus vaikuttaa sanakirjan alustukseen, jolloin voisi testata suorituskykyä eri tavoin alustettujen sanakirjojen välillä. LZW-algoritmin optimointi on myös yksi mahdollinen kehitysehdotus. Tämä tarkoittaa sitä, että LZW-algoritmin sanakirja optimoidaan niin, että käyttämättömät merkit/sekvenssit välillä tyhjennetään. Tällä saadaan mahdollisesti suorituskykyä parannettua ja tallennettavan tietueen kokoa pienennettyä.
 
 ## Kielimallien käyttö
 
