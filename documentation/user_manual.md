@@ -62,7 +62,7 @@ Vaihtoehdot ovat:
 
 ### Yksittäisen algoritmin valinta
 
-Mikäli käyttäjä valitsee vaihtoehdon "H" tai "L", pyydetän käyttäjää valitsemaan toiminto.
+Mikäli käyttäjä valitsee vaihtoehdon "H" tai "L", pyydetään käyttäjää valitsemaan toiminto. \
 Vaihtoehdot ovat:
 - C: pakataan tiedosto valitulla algoritmilla.
 - D: puretaan tiedosto valitulla algoritmilla.
